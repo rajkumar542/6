@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>React Code Examples</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #16161a;
+    --card: #1c1c22;
+    --border: #2a2a35;
+    --accent: #ff6b35;
+    --accent2: #00d4aa;
+    --accent3: #a855f7;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --code-bg: #111118;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding: 24px 12px 60px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* ── HEADER ─────────────────────────────────── */
+  header { text-align: center; margin-bottom: 40px; padding: 0 8px; }
+
+  header .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 4px 12px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  header h1 {
+    font-size: clamp(22px, 7vw, 52px);
+    font-weight: 800;
+    line-height: 1.15;
+    background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: clamp(11px, 3vw, 15px);
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    word-break: break-all;
+  }
+
+  /* ── CONTAINER ──────────────────────────────── */
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  /* ── EXAMPLE BLOCK ──────────────────────────── */
+  .example-block {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--card);
+    position: relative;
+  }
+
+  .example-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent-line, var(--accent));
+    z-index: 1;
+  }
+
+  /* ── BLOCK HEADER ───────────────────────────── */
+  .block-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-wrap: wrap;
+  }
+
+  .step-num {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--accent-line, var(--accent));
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .block-title { font-size: clamp(13px, 3.5vw, 16px); font-weight: 700; }
+  .block-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(9px, 2.5vw, 11px);
+    color: var(--muted);
+    margin-top: 2px;
+    word-break: break-word;
+  }
+
+  /* ── SPLIT LAYOUT ───────────────────────────── */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .panel { padding: 16px; min-width: 0; }
+
+  .panel + .panel { border-left: 1px solid var(--border); }
+
+  .panel-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  /* ── CODE ───────────────────────────────────── */
+  pre {
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 12px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(10px, 2.2vw, 12px);
+    line-height: 1.7;
+    border: 1px solid var(--border);
+    white-space: pre;
+    word-break: normal;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .kw  { color: #c792ea; }
+  .fn  { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .cmt { color: #546e7a; font-style: italic; }
+  .num { color: #f78c6c; }
+  .tag { color: #00d4aa; }
+
+  /* ── OUTPUT BOX ─────────────────────────────── */
+  .output-box {
+    background: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 100px;
+    border: 1px solid #ddd;
+    font-family: Arial, sans-serif;
+    color: #000;
+    overflow: hidden;
+  }
+
+  /* Example 1 */
+  .click-box {
+    width: 100%; height: 120px;
+    border: 8px dashed #d61b1b;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    cursor: pointer; user-select: none;
+    border-radius: 4px; transition: background 0.15s;
+  }
+  .click-box:hover, .click-box:active { background: #fff5f5; }
+  .click-box h1 { font-size: clamp(14px, 4vw, 20px); margin: 3px 0; color: #111; text-align:center; }
+
+  /* Example 2 */
+  .msg-box h2 { font-size: clamp(13px, 3.5vw, 18px); margin-bottom: 6px; color: #111; }
+
+  /* Example 3 form */
+  .form-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+  .form-box input {
+    border: 1px solid #ccc; padding: 7px 10px;
+    border-radius: 4px; font-size: 14px; outline: none;
+    flex: 1; min-width: 100px;
+  }
+  .form-box button {
+    padding: 7px 14px;
+    background: #007bff; color: #fff;
+    border: none; border-radius: 4px; cursor: pointer;
+    font-size: 13px; white-space: nowrap;
+  }
+  .form-box p { font-size: 12px; color: #555; margin-top: 6px; }
+
+  .form-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+
+  /* Example 4 */
+  .num-box input {
+    border: 1px solid #ccc; padding: 7px 10px;
+    border-radius: 4px; font-size: 14px;
+    width: 100%; max-width: 200px; outline: none;
+  }
+  .num-box p { margin-top: 10px; font-size: 14px; color: #333; font-weight: 600; }
+  .num-box h2 { margin-bottom: 10px; color: #111; font-size: clamp(14px, 4vw, 18px); }
+
+  /* Example 5 */
+  .list-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+  .list-box input {
+    border: 1px solid #ccc; padding: 7px 10px;
+    border-radius: 4px; font-size: 14px;
+    flex: 1; min-width: 100px; outline: none;
+  }
+  .list-box button {
+    padding: 7px 14px;
+    background: #28a745; color: #fff;
+    border: none; border-radius: 4px; cursor: pointer; font-size: 13px;
+  }
+  .list-box ul { margin-top: 8px; padding-left: 18px; color: #333; font-size: 13px; }
+  .list-box h2 { margin-bottom: 8px; color: #111; font-size: clamp(14px, 4vw, 18px); }
+
+  .list-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* Example 6 */
+  .slider-box { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .slider-box img {
+    width: 100%; max-width: 180px; height: auto; aspect-ratio: 4/3;
+    object-fit: cover; border-radius: 6px; border: 2px solid #ddd;
+  }
+  .slider-box button {
+    padding: 7px 18px; background: #333; color: #fff;
+    border: none; border-radius: 4px; cursor: pointer; font-size: 13px;
+  }
+  .slider-box h2 { color: #111; font-size: clamp(14px, 4vw, 18px); }
+
+  /* ── SERVER STEPS ───────────────────────────── */
+  .server-section { margin-top: 14px; }
+  .server-section .section-title {
+    font-size: 11px; font-weight: 700; color: var(--accent2);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase;
+  }
+  .step-list { display: flex; flex-direction: column; gap: 10px; }
+  .step-item { display: flex; gap: 10px; align-items: flex-start; }
+  .step-dot {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--accent2); color: #000;
+    font-size: 10px; font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .step-content p { font-size: clamp(11px, 3vw, 13px); color: var(--text); margin-bottom: 5px; line-height: 1.5; }
+  .step-content code {
+    display: block; background: var(--code-bg);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 8px 12px; font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(10px, 2.5vw, 12px); color: var(--accent2);
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+
+  .data-box {
+    background: var(--code-bg); border: 1px solid var(--border);
+    border-radius: 6px; padding: 10px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(10px, 2.5vw, 12px); color: var(--accent2);
+    margin-top: 6px; overflow-x: auto; word-break: break-all;
+  }
+
+  /* ── FOLDER STRUCTURE ───────────────────────── */
+  .folder-tree {
+    margin-top: 10px; background: #0d0d0f;
+    border: 1px solid #2a2a35; border-radius: 8px;
+    padding: 12px; font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(10px, 2.5vw, 12px); line-height: 1.9;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+
+  /* ── EXPLANATION ────────────────────────────── */
+  .explanation {
+    border-top: 1px solid var(--border);
+    padding: 18px 16px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .explanation-title {
+    font-size: clamp(9px, 2.5vw, 11px);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-line, var(--accent));
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .explanation-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .explain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: 10px;
+  }
+
+  .explain-card {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    border-left: 3px solid var(--accent-line, var(--accent));
+  }
+
+  .explain-card .card-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(8px, 2vw, 10px);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent-line, var(--accent));
+    margin-bottom: 4px;
+  }
+
+  .explain-card .card-title {
+    font-size: clamp(12px, 3vw, 13px);
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 5px;
+  }
+
+  .explain-card .card-body {
+    font-size: clamp(11px, 2.8vw, 12.5px);
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .explain-card .card-body code {
+    background: #1e1e2a;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(9px, 2.2vw, 11px);
+    color: var(--accent2);
+    word-break: break-all;
+  }
+
+  /* ── FLOW ───────────────────────────────────── */
+  .explain-flow {
+    margin-top: 12px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .explain-flow .flow-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(8px, 2vw, 10px);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .flow-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .flow-step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: clamp(10px, 2.5vw, 12px);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+
+  .flow-arrow {
+    color: var(--accent-line, var(--accent));
+    font-size: 14px;
+    font-weight: 700;
+    padding: 0 2px;
+    flex-shrink: 0;
+  }
+
+  /* ════════════════════════════════════════════
+     RESPONSIVE — SPLIT PANELS (≤680px)
+  ════════════════════════════════════════════ */
+  @media (max-width: 680px) {
+    .split { grid-template-columns: 1fr; }
+    .panel + .panel { border-left: none; border-top: 1px solid var(--border); }
+  }
+
+  /* ════════════════════════════════════════════
+     RESPONSIVE — TABLET (≤768px)
+  ════════════════════════════════════════════ */
+  @media (max-width: 768px) {
+    body { padding: 20px 14px 60px; }
+    header { margin-bottom: 32px; }
+    header p { font-size: 12px; }
+    .container { gap: 32px; }
+
+    .block-header { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+    .block-title  { font-size: 14px; }
+    .block-subtitle { font-size: 10px; }
+
+    .panel { padding: 16px 14px; }
+    pre   { font-size: 11px; padding: 12px; line-height: 1.6; }
+
+    .explanation { padding: 18px 14px; }
+    .explain-grid { grid-template-columns: 1fr; gap: 10px; }
+    .explain-card { padding: 12px 14px; }
+    .explain-card .card-body { font-size: 12px; }
+
+    /* flow — vertical on mobile */
+    .flow-steps { flex-direction: column; align-items: flex-start; gap: 4px; }
+    .flow-arrow { transform: rotate(90deg); padding: 1px 8px; font-size: 13px; }
+    .flow-step  { font-size: 11px; padding: 6px 10px; width: 100%; box-sizing: border-box; }
+
+    .output-box { padding: 14px; }
+
+    /* fix fixed-width inputs/buttons to be full-width */
+    .form-box  { display: flex; flex-direction: column; gap: 8px; }
+    .form-row  { display: flex; flex-direction: column; gap: 8px; }
+    .form-box input  { width: 100% !important; margin: 0; }
+    .form-box button { width: 100%; margin-left: 0 !important; padding: 10px; font-size: 15px; }
+
+    .num-box input  { width: 100% !important; }
+
+    .list-box { display: flex; flex-direction: column; }
+    .list-row { display: flex; flex-direction: column; gap: 8px; }
+    .list-box input  { width: 100% !important; }
+    .list-box button { margin-left: 0 !important; width: 100%; padding: 10px; font-size: 15px; }
+
+    .slider-box img    { width: 100%; max-width: 280px; height: 180px; }
+    .slider-box button { width: 100%; padding: 10px 20px; font-size: 15px; }
+
+    .step-content code { font-size: 11px; padding: 9px 12px; word-break: break-all; }
+    .step-content p    { font-size: 12px; }
+    .data-box          { font-size: 11px; word-break: break-all; }
+    .section-title     { font-size: 11px !important; }
+
+    /* folder tree */
+    .folder-tree { font-size: 11px !important; line-height: 1.8 !important; padding: 12px !important; }
+  }
+
+  /* ════════════════════════════════════════════
+     RESPONSIVE — SMALL MOBILE (≤420px)
+  ════════════════════════════════════════════ */
+  @media (max-width: 420px) {
+    body { padding: 14px 10px 48px; }
+    header .badge { font-size: 9px; letter-spacing: 2px; padding: 3px 10px; }
+    header p { font-size: 10px; word-break: break-all; }
+    .container { gap: 24px; }
+
+    .block-header { padding: 10px 12px; gap: 8px; }
+    .step-num { width: 26px; height: 26px; font-size: 11px; }
+    .block-title  { font-size: 13px; }
+    .block-subtitle { font-size: 9px; }
+
+    .panel { padding: 12px 10px; }
+    pre { font-size: 10px; padding: 10px; }
+
+    .explanation { padding: 14px 10px; }
+    .explanation-title { font-size: 9px; letter-spacing: 2px; }
+    .explain-card { padding: 10px 12px; }
+    .explain-card .card-label { font-size: 9px; }
+    .explain-card .card-title { font-size: 12px; }
+    .explain-card .card-body  { font-size: 11.5px; }
+    .explain-card .card-body code { font-size: 10px; }
+
+    .click-box { height: 100px; border-width: 7px; }
+    .click-box h1 { font-size: 15px; }
+    .msg-box h2 { font-size: 14px; }
+
+    .output-box { padding: 12px; min-height: 70px; }
+    .num-box h2, .list-box h2, .slider-box h2 { font-size: 14px; }
+
+    .step-dot { width: 20px; height: 20px; font-size: 10px; }
+    .step-item { gap: 10px; }
+
+    .flow-step { font-size: 10px; padding: 5px 8px; }
+    .flow-arrow { font-size: 12px; }
+  }
+
+  /* ════════════════════════════════════════════
+     DESKTOP BOOST (≥1024px)
+  ════════════════════════════════════════════ */
+  @media (min-width: 1024px) {
+    .container { max-width: 1080px; }
+    .explain-grid { grid-template-columns: repeat(2, 1fr); }
+    .flow-steps { flex-direction: row; flex-wrap: wrap; align-items: center; }
+    .flow-arrow { transform: none; padding: 0 6px; }
+    .flow-step  { width: auto; }
+
+    /* restore fixed widths on desktop for inputs */
+    .form-box  { flex-direction: row; align-items: center; gap: 0; flex-wrap: wrap; }
+    .form-row  { flex-direction: row; align-items: center; gap: 0; }
+    .form-box input  { width: 180px !important; }
+    .form-box button { width: auto; margin-left: 8px !important; }
+    .num-box input   { width: 160px !important; }
+    .list-row { flex-direction: row; align-items: center; gap: 0; }
+    .list-box input  { width: 150px !important; }
+    .list-box button { width: auto; margin-left: 8px !important; margin-top: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">React Examples</div>
+  <h1>Code Output Guide</h1>
+  <p>// App.js · server.js · data.json</p>
+</header>
+
+<div class="container">
+
+<!-- ═══════════════════ EXAMPLE 1 ═══════════════ -->
+<div class="example-block" style="--accent-line:#ff6b35">
+  <div class="block-header">
+    <div class="step-num" style="background:#ff6b35">1</div>
+    <div>
+      <div class="block-title">Click Counter</div>
+      <div class="block-subtitle">useState · onClick · event handler</div>
+    </div>
+  </div>
+
+  <div class="split">
+    <div class="panel">
+      <div class="panel-label">Code — App.js</div>
+      <pre><span class="kw">import</span> { <span class="fn">useState</span> } <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">const</span> [count, setCount] = <span class="fn">useState</span>(<span class="num">0</span>);
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div</span>
+      <span class="fn">onClick</span>={() =&gt; <span class="fn">setCount</span>(count+<span class="num">1</span>)}
+      style={{
+        width:<span class="str">"100%"</span>, height:<span class="str">"200px"</span>,
+        border:<span class="str">"10px dashed #d61b1b"</span>
+      }}
+    <span class="tag">&gt;</span>
+      <span class="tag">&lt;h1&gt;</span>mmbitan {count}<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;h1&gt;</span>Inga vandhu mmbu<span class="tag">&lt;/h1&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> App;</pre>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label">Output Preview</div>
+      <div class="output-box">
+        <div class="click-box" onclick="clickCount()">
+          <h1>mmbitan <span id="cnt">0</span></h1>
+          <h1>Inga vandhu mmbu</h1>
+        </div>
+        <p style="font-size:11px;color:#888;margin-top:8px;text-align:center">👆 Click the box to increment</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="explanation">
+    <div class="explanation-title">📖 Explanation</div>
+    <div class="explain-grid">
+      <div class="explain-card">
+        <div class="card-label">What is useState?</div>
+        <div class="card-title">State Hook</div>
+        <div class="card-body"><code>useState(0)</code> creates a state variable <code>count</code> starting at <code>0</code>. <code>setCount</code> updates it. Every time state changes, React re-renders the component automatically.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">onClick Event</div>
+        <div class="card-title">Event Handler</div>
+        <div class="card-body"><code>onClick={() =&gt; setCount(count+1)}</code> — when the user clicks the div, this arrow function runs and increases count by 1. The <code>=&gt;</code> creates an inline function.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">JSX Expression</div>
+        <div class="card-title">Displaying State</div>
+        <div class="card-body"><code>{count}</code> inside JSX renders the current value. Curly braces <code>{}</code> let you embed any JavaScript expression directly into your HTML-like JSX code.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">Inline Style</div>
+        <div class="card-title">style={{ }} in JSX</div>
+        <div class="card-body">Styles in React are JavaScript objects inside double curly braces. CSS property names become camelCase — <code>border-style</code> → <code>borderStyle</code>, <code>background-color</code> → <code>backgroundColor</code>.</div>
+      </div>
+    </div>
+    <div class="explain-flow">
+      <div class="flow-title">How it works — flow</div>
+      <div class="flow-steps">
+        <div class="flow-step">User clicks div</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">onClick fires</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">setCount(count+1)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">state updates</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Re-render with new count</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ EXAMPLE 2 ═══════════════ -->
+<div class="example-block" style="--accent-line:#00d4aa">
+  <div class="block-header">
+    <div class="step-num" style="background:#00d4aa;color:#000">2</div>
+    <div>
+      <div class="block-title">Component Props</div>
+      <div class="block-subtitle">function component · props · reusable</div>
+    </div>
+  </div>
+
+  <div class="split">
+    <div class="panel">
+      <div class="panel-label">Code — App.js</div>
+      <pre><span class="kw">import</span> React <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="kw">function</span> <span class="fn">Message</span>(props) {
+  <span class="kw">return</span> (
+    <span class="tag">&lt;h2&gt;</span>
+      Hello, {props.name}!
+      Welcome to React.
+    <span class="tag">&lt;/h2&gt;</span>
+  );
+}
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div</span> style={{textAlign:<span class="str">"center"</span>}}<span class="tag">&gt;</span>
+      <span class="tag">&lt;Message</span> <span class="fn">name</span>=<span class="str">"A"</span> <span class="tag">/&gt;</span>
+      <span class="tag">&lt;Message</span> <span class="fn">name</span>=<span class="str">"B"</span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> App;</pre>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label">Output Preview</div>
+      <div class="output-box msg-box" style="text-align:center">
+        <h2>Hello, A! Welcome to React.</h2>
+        <h2>Hello, B! Welcome to React.</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="explanation">
+    <div class="explanation-title">📖 Explanation</div>
+    <div class="explain-grid">
+      <div class="explain-card">
+        <div class="card-label">Component</div>
+        <div class="card-title">What is Message()?</div>
+        <div class="card-body"><code>Message</code> is a custom reusable component — a JavaScript function that returns JSX. Define it once, use it multiple times like an HTML tag: <code>&lt;Message /&gt;</code>.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">Props</div>
+        <div class="card-title">Passing Data to Components</div>
+        <div class="card-body"><code>name="A"</code> is a prop (short for property). Props are passed like HTML attributes and received as <code>props.name</code> inside. They let you reuse the same component with different data.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">Reusability</div>
+        <div class="card-title">One Component, Many Uses</div>
+        <div class="card-body">Instead of writing two separate <code>&lt;h2&gt;</code> tags manually, the same <code>Message</code> component is used twice with different <code>name</code> props. Build once, reuse everywhere.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">Parent → Child</div>
+        <div class="card-title">Component Tree</div>
+        <div class="card-body"><code>App</code> is the parent that renders two child <code>Message</code> components. Data flows one-way: parent → child through props. Children cannot change their own props.</div>
+      </div>
+    </div>
+    <div class="explain-flow">
+      <div class="flow-title">How it works — flow</div>
+      <div class="flow-steps">
+        <div class="flow-step">App renders</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">&lt;Message name="A"/&gt;</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">props.name = "A"</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Hello, A! Welcome to React.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ EXAMPLE 3 ═══════════════ -->
+<div class="example-block" style="--accent-line:#a855f7">
+  <div class="block-header">
+    <div class="step-num" style="background:#a855f7">3</div>
+    <div>
+      <div class="block-title">Form + Express Backend</div>
+      <div class="block-subtitle">fetch · POST · server.js · data.json</div>
+    </div>
+  </div>
+
+  <div class="split">
+    <div class="panel">
+      <div class="panel-label">Code — App.js</div>
+      <pre><span class="kw">import</span> { <span class="fn">useState</span> } <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">const</span> [name, setName] = <span class="fn">useState</span>(<span class="str">""</span>);
+
+  <span class="kw">const</span> submit = <span class="kw">async</span> (e) =&gt; {
+    e.<span class="fn">preventDefault</span>();
+    <span class="kw">await</span> <span class="fn">fetch</span>(
+      <span class="str">"http://localhost:5000/save"</span>,
+      {
+        method: <span class="str">"POST"</span>,
+        headers: {
+          <span class="str">"Content-Type"</span>:<span class="str">"application/json"</span>
+        },
+        body: <span class="fn">JSON.stringify</span>({ name }),
+      }
+    );
+    <span class="fn">setName</span>(<span class="str">""</span>);
+  };
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;form</span> <span class="fn">onSubmit</span>={submit}<span class="tag">&gt;</span>
+      <span class="tag">&lt;input</span>
+        value={name}
+        <span class="fn">onChange</span>={
+          (e) =&gt; <span class="fn">setName</span>(e.target.value)
+        }
+        placeholder=<span class="str">"Enter name"</span>
+      <span class="tag">/&gt;</span>
+      <span class="tag">&lt;button&gt;</span>Submit<span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/form&gt;</span>
+  );
+}
+<span class="kw">export default</span> App;</pre>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label">Output Preview</div>
+      <div class="output-box form-box">
+        <div class="form-row">
+          <input id="nameInput" placeholder="Enter name" />
+          <button onclick="formSubmit()">Submit</button>
+        </div>
+        <p id="formMsg" style="display:none;color:#28a745;font-weight:600">✅ Saved to server!</p>
+      </div>
+
+      <hr class="divider" style="margin-top:14px"/>
+
+      <div class="server-section">
+        <div class="section-title">⚙ Server Setup</div>
+        <div class="step-list">
+
+          <div class="step-item">
+            <div class="step-dot">1</div>
+            <div class="step-content">
+              <p>Create project &amp; init npm — <strong>this creates <code style="color:#a855f7">package.json</code> automatically</strong></p>
+              <code>npm init -y</code>
+              <div class="folder-tree">
+                <span style="color:#888;font-size:10px;letter-spacing:1px">📁 FOLDER STRUCTURE AFTER npm init -y</span><br/><br/>
+                <span style="color:#f59e0b">📂 user/</span><br/>
+                <span style="color:#555">│</span><br/>
+                <span style="color:#555">├──</span> <span style="color:#00d4aa">{} data.json</span>   <span style="color:#546e7a;font-size:10px">← create manually with [ ]</span><br/>
+                <span style="color:#555">├──</span> <span style="color:#a855f7">{} package.json</span> <span style="color:#546e7a;font-size:10px">← ✅ auto-created by npm init -y</span><br/>
+                <span style="color:#555">└──</span> <span style="color:#f59e0b">JS server.js</span>    <span style="color:#546e7a;font-size:10px">← create manually</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-dot">2</div>
+            <div class="step-content">
+              <p>Install Express &amp; CORS — <strong>adds them to <code style="color:#a855f7">package.json</code> dependencies</strong></p>
+              <code>npm install express cors</code>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-dot">3</div>
+            <div class="step-content">
+              <p>Create <strong>data.json</strong> — start with empty array only</p>
+              <code>[ ]</code>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-dot">4</div>
+            <div class="step-content">
+              <p>Run the server</p>
+              <code>node server.js</code>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-dot">5</div>
+            <div class="step-content">
+              <p>After submitting names, <strong>data.json</strong> updates automatically:</p>
+              <div class="data-box">[ { "name": "kumar" }, { "name": "raj" } ]</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <hr class="divider"/>
+      <div class="panel-label" style="margin-bottom:10px">Code — server.js</div>
+      <pre style="font-size:clamp(9px,2.2vw,11px)"><span class="kw">const</span> express = <span class="fn">require</span>(<span class="str">"express"</span>);
+<span class="kw">const</span> fs = <span class="fn">require</span>(<span class="str">"fs"</span>);
+<span class="kw">const</span> cors = <span class="fn">require</span>(<span class="str">"cors"</span>);
+
+<span class="kw">const</span> app = <span class="fn">express</span>();
+app.<span class="fn">use</span>(<span class="fn">cors</span>());
+app.<span class="fn">use</span>(express.<span class="fn">json</span>());
+
+app.<span class="fn">post</span>(<span class="str">"/save"</span>, (req, res) =&gt; {
+  <span class="kw">let</span> data = <span class="fn">JSON.parse</span>(
+    fs.<span class="fn">readFileSync</span>(
+      <span class="str">"data.json"</span>, <span class="str">"utf8"</span>
+    ) || <span class="str">"[]"</span>
+  );
+  data.<span class="fn">push</span>(req.body);
+  fs.<span class="fn">writeFileSync</span>(<span class="str">"data.json"</span>,
+    <span class="fn">JSON.stringify</span>(data,<span class="kw">null</span>,<span class="num">2</span>));
+  res.<span class="fn">send</span>(<span class="str">"Saved"</span>);
+});
+
+app.<span class="fn">listen</span>(<span class="num">5000</span>, () =&gt;
+  console.<span class="fn">log</span>(<span class="str">"Server on port 5000"</span>));</pre>
+    </div>
+  </div>
+
+  <div class="explanation">
+    <div class="explanation-title">📖 Explanation</div>
+    <div class="explain-grid">
+      <div class="explain-card">
+        <div class="card-label">Controlled Input</div>
+        <div class="card-title">value + onChange</div>
+        <div class="card-body"><code>value={name}</code> ties the input to React state. <code>onChange={(e)=&gt;setName(e.target.value)}</code> updates state on every keystroke. This is a "controlled component".</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">async / await</div>
+        <div class="card-title">Sending Data to Server</div>
+        <div class="card-body"><code>async</code> makes the function asynchronous. <code>await fetch(...)</code> waits for the POST request to finish before continuing. Without <code>await</code>, the code runs before the server responds.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">fetch API</div>
+        <div class="card-title">HTTP POST Request</div>
+        <div class="card-body"><code>fetch("http://localhost:5000/save", { method:"POST", ... })</code> sends data to Express. <code>JSON.stringify({name})</code> converts the JS object into a JSON string for the request body.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">e.preventDefault()</div>
+        <div class="card-title">Prevent Page Reload</div>
+        <div class="card-body">By default, submitting a form reloads the page. <code>e.preventDefault()</code> stops this so React handles the submit itself. Without it, the page refreshes and state is lost.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">CORS</div>
+        <div class="card-title">Why cors is needed</div>
+        <div class="card-body">React runs on <code>:3000</code>, server on <code>:5000</code>. Browsers block cross-origin requests by default. <code>cors()</code> middleware in Express allows requests from different ports.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">fs module</div>
+        <div class="card-title">Reading &amp; Writing Files</div>
+        <div class="card-body">Node's built-in <code>fs</code> reads <code>data.json</code> using <code>readFileSync</code>, adds the new name, then saves back with <code>writeFileSync</code>. Like a simple file-based database.</div>
+      </div>
+    </div>
+    <div class="explain-flow">
+      <div class="flow-title">Full request flow</div>
+      <div class="flow-steps">
+        <div class="flow-step">User types name</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">onChange updates state</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Submit clicked</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">fetch POST to :5000/save</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Server writes data.json</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Input cleared</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ EXAMPLE 4 ═══════════════ -->
+<div class="example-block" style="--accent-line:#f59e0b">
+  <div class="block-header">
+    <div class="step-num" style="background:#f59e0b;color:#000">4</div>
+    <div>
+      <div class="block-title">Number Sign Checker</div>
+      <div class="block-subtitle">useState · ternary operator · conditional render</div>
+    </div>
+  </div>
+
+  <div class="split">
+    <div class="panel">
+      <div class="panel-label">Code — App.js</div>
+      <pre><span class="kw">import</span> React, { <span class="fn">useState</span> } <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">const</span> [num, setNum] = <span class="fn">useState</span>(<span class="str">""</span>);
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;h2&gt;</span>Enter Number<span class="tag">&lt;/h2&gt;</span>
+      <span class="tag">&lt;input</span>
+        type=<span class="str">"number"</span>
+        value={num}
+        <span class="fn">onChange</span>={
+          (e) =&gt; <span class="fn">setNum</span>(e.target.value)
+        }
+        placeholder=<span class="str">"Enter number"</span>
+      <span class="tag">/&gt;</span>
+      {
+        num === <span class="str">""</span>
+          ? <span class="tag">&lt;p&gt;</span>Enter a number<span class="tag">&lt;/p&gt;</span>
+          : num &gt; <span class="num">0</span>
+          ? <span class="tag">&lt;p&gt;</span>Positive<span class="tag">&lt;/p&gt;</span>
+          : num &lt; <span class="num">0</span>
+          ? <span class="tag">&lt;p&gt;</span>Negative<span class="tag">&lt;/p&gt;</span>
+          : <span class="tag">&lt;p&gt;</span>Zero<span class="tag">&lt;/p&gt;</span>
+      }
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+<span class="kw">export default</span> App;</pre>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label">Output Preview</div>
+      <div class="output-box num-box">
+        <h2>Enter Number</h2>
+        <input type="number" id="numInput" placeholder="Enter number" oninput="checkNum(this.value)" />
+        <p id="numResult">Enter a number</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="explanation">
+    <div class="explanation-title">📖 Explanation</div>
+    <div class="explain-grid">
+      <div class="explain-card">
+        <div class="card-label">Ternary Operator</div>
+        <div class="card-title">condition ? A : B</div>
+        <div class="card-body">Shorthand <code>if-else</code>. Format: <code>condition ? trueValue : falseValue</code>. Here chained — if empty show prompt, else if &gt;0 "Positive", else if &lt;0 "Negative", else "Zero".</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">Conditional Rendering</div>
+        <div class="card-title">Show Different JSX</div>
+        <div class="card-body">React renders different elements based on state. The <code>{ }</code> block evaluates the ternary and returns the correct <code>&lt;p&gt;</code> tag. React swaps the old element for the new one on each re-render.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">useState("")</div>
+        <div class="card-title">Initial State is Empty String</div>
+        <div class="card-body">State starts as <code>""</code>, not <code>0</code>. Checking <code>num === ""</code> shows a hint message before the user types anything, instead of immediately showing "Zero" by default.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">type="number"</div>
+        <div class="card-title">HTML Number Input</div>
+        <div class="card-body"><code>type="number"</code> restricts keyboard to numeric entry and shows up/down arrows. The value from <code>e.target.value</code> is always a string — JS's <code>&gt;</code> and <code>&lt;</code> handle type coercion automatically.</div>
+      </div>
+    </div>
+    <div class="explain-flow">
+      <div class="flow-title">Ternary logic — step by step</div>
+      <div class="flow-steps">
+        <div class="flow-step">num === "" ?</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">"Enter a number"</div>
+        <div class="flow-arrow">|</div>
+        <div class="flow-step">num &gt; 0 ?</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">"Positive"</div>
+        <div class="flow-arrow">|</div>
+        <div class="flow-step">num &lt; 0 ?</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">"Negative" else "Zero"</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ EXAMPLE 5 ═══════════════ -->
+<div class="example-block" style="--accent-line:#22c55e">
+  <div class="block-header">
+    <div class="step-num" style="background:#22c55e;color:#000">5</div>
+    <div>
+      <div class="block-title">Item List</div>
+      <div class="block-subtitle">useState · spread operator · .map()</div>
+    </div>
+  </div>
+
+  <div class="split">
+    <div class="panel">
+      <div class="panel-label">Code — App.js</div>
+      <pre><span class="kw">import</span> React, { <span class="fn">useState</span> } <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">const</span> [item, setItem] = <span class="fn">useState</span>(<span class="str">""</span>);
+  <span class="kw">const</span> [list, setList] = <span class="fn">useState</span>([]);
+
+  <span class="kw">const</span> addItem = () =&gt; {
+    <span class="fn">setList</span>([...list, item]);
+    <span class="fn">setItem</span>(<span class="str">""</span>);
+  };
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;h2&gt;</span>Item List<span class="tag">&lt;/h2&gt;</span>
+      <span class="tag">&lt;input</span>
+        type=<span class="str">"text"</span>
+        value={item}
+        <span class="fn">onChange</span>={
+          (e) =&gt; <span class="fn">setItem</span>(e.target.value)
+        }
+        placeholder=<span class="str">"Enter item"</span>
+      <span class="tag">/&gt;</span>
+      <span class="tag">&lt;button</span> <span class="fn">onClick</span>={addItem}<span class="tag">&gt;</span>
+        Add
+      <span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;ul&gt;</span>
+        {list.<span class="fn">map</span>((val, idx) =&gt; (
+          <span class="tag">&lt;li</span> key={idx}<span class="tag">&gt;</span>{val}<span class="tag">&lt;/li&gt;</span>
+        ))}
+      <span class="tag">&lt;/ul&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+<span class="kw">export default</span> App;</pre>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label">Output Preview</div>
+      <div class="output-box list-box">
+        <h2>Item List</h2>
+        <div class="list-row">
+          <input type="text" id="itemInput" placeholder="Enter item" />
+          <button onclick="addItem()">Add</button>
+        </div>
+        <ul id="itemList"></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="explanation">
+    <div class="explanation-title">📖 Explanation</div>
+    <div class="explain-grid">
+      <div class="explain-card">
+        <div class="card-label">Two States</div>
+        <div class="card-title">item + list</div>
+        <div class="card-body"><code>item</code> holds current text in the input. <code>list</code> holds all added items as an array. Two separate <code>useState</code> calls manage two different pieces of data independently.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">Spread Operator</div>
+        <div class="card-title">[...list, item]</div>
+        <div class="card-body"><code>[...list, item]</code> creates a new array by copying all existing items and appending the new one. Never mutate the old array — React needs a new array reference to detect the change and re-render.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">.map()</div>
+        <div class="card-title">Rendering Lists</div>
+        <div class="card-body"><code>list.map((val, idx) =&gt; &lt;li key={idx}&gt;{val}&lt;/li&gt;)</code> loops through each item and returns a <code>&lt;li&gt;</code> JSX element. React renders all of them inside the <code>&lt;ul&gt;</code>.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">key prop</div>
+        <div class="card-title">Why key={idx}?</div>
+        <div class="card-body">When rendering lists, React needs a unique <code>key</code> on each element to track which item is which. <code>idx</code> (the array index) is used here. For production, a unique ID is better than index.</div>
+      </div>
+    </div>
+    <div class="explain-flow">
+      <div class="flow-title">How addItem works</div>
+      <div class="flow-steps">
+        <div class="flow-step">Type "apple"</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">item = "apple"</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Click Add</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">setList([...list,"apple"])</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">setItem("") clears input</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">&lt;li&gt; appears in list</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ EXAMPLE 6 ═══════════════ -->
+<div class="example-block" style="--accent-line:#3b82f6">
+  <div class="block-header">
+    <div class="step-num" style="background:#3b82f6">6</div>
+    <div>
+      <div class="block-title">Image Slider</div>
+      <div class="block-subtitle">useState · dynamic src · picsum.photos API</div>
+    </div>
+  </div>
+
+  <div class="split">
+    <div class="panel">
+      <div class="panel-label">Code — App.js</div>
+      <pre><span class="kw">import</span> React, { <span class="fn">useState</span> } <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">const</span> [num, setNum] = <span class="fn">useState</span>(<span class="num">1</span>);
+
+  <span class="kw">function</span> <span class="fn">next</span>() {
+    <span class="fn">setNum</span>(num + <span class="num">1</span>);
+  }
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div</span> style={{
+      display:<span class="str">"flex"</span>,
+      flexDirection:<span class="str">"column"</span>,
+      justifyContent:<span class="str">"center"</span>,
+      alignItems:<span class="str">"center"</span>
+    }}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h2&gt;</span>Image Slider<span class="tag">&lt;/h2&gt;</span>
+
+      <span class="tag">&lt;img</span>
+        src={<span class="str">`https://picsum.photos
+          /500/500?random=</span>${num}<span class="str">`</span>}
+        alt=<span class="str">"img"</span>
+      <span class="tag">/&gt;</span>
+
+      <span class="tag">&lt;button</span> <span class="fn">onClick</span>={next}<span class="tag">&gt;</span>
+        Next Image
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+<span class="kw">export default</span> App;</pre>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label">Output Preview</div>
+      <div class="output-box">
+        <div class="slider-box">
+          <h2>Image Slider</h2>
+          <img id="sliderImg" src="https://picsum.photos/500/500?random=1" alt="img" />
+          <button onclick="nextImage()">Next Image</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="explanation">
+    <div class="explanation-title">📖 Explanation</div>
+    <div class="explain-grid">
+      <div class="explain-card">
+        <div class="card-label">Template Literal</div>
+        <div class="card-title">Dynamic Image URL</div>
+        <div class="card-body"><code>`...?random=${num}`</code> uses a backtick template literal to embed <code>num</code> into the URL. Every time <code>num</code> changes, <code>src</code> gets a new URL and the browser loads a different image.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">picsum.photos</div>
+        <div class="card-title">Free Random Image API</div>
+        <div class="card-body">Lorem Picsum is a free public API that returns random 500×500 images. Adding <code>?random=N</code> with different numbers ensures a unique image each time. No API key needed — great for prototyping.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">useState(1)</div>
+        <div class="card-title">Counter as Image Index</div>
+        <div class="card-body">State starts at <code>1</code> and increments on each click. This number is plugged into the API URL. Instead of storing image URLs in an array, the API generates them on demand using the number as a seed.</div>
+      </div>
+      <div class="explain-card">
+        <div class="card-label">Flexbox Layout</div>
+        <div class="card-title">Centering with style</div>
+        <div class="card-body"><code>display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"</code> centers everything using CSS Flexbox — written as a JS object in React's inline <code>style</code> prop.</div>
+      </div>
+    </div>
+    <div class="explain-flow">
+      <div class="flow-title">How the image changes</div>
+      <div class="flow-steps">
+        <div class="flow-step">num = 1 (initial)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">src = "…/random=1"</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Click "Next Image"</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">setNum(2)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">src = "…/random=2"</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">New image loads</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+  // Ex 1 – Counter
+  let count = 0;
+  function clickCount() {
+    count++;
+    document.getElementById('cnt').textContent = count;
+  }
+
+  // Ex 3 – Form
+  function formSubmit() {
+    const input = document.getElementById('nameInput');
+    if (!input.value.trim()) return;
+    const msg = document.getElementById('formMsg');
+    msg.style.display = 'block';
+    input.value = '';
+    setTimeout(() => msg.style.display = 'none', 2000);
+  }
+
+  // Ex 4 – Number
+  function checkNum(v) {
+    const el = document.getElementById('numResult');
+    if (v === '') { el.textContent = 'Enter a number'; el.style.color = '#555'; return; }
+    const n = parseFloat(v);
+    if (n > 0)      { el.textContent = 'Positive ✅'; el.style.color = '#16a34a'; }
+    else if (n < 0) { el.textContent = 'Negative ❌'; el.style.color = '#dc2626'; }
+    else            { el.textContent = 'Zero ⚪';     el.style.color = '#6b7280'; }
+  }
+
+  // Ex 5 – List
+  function addItem() {
+    const input = document.getElementById('itemInput');
+    const val = input.value.trim();
+    if (!val) return;
+    const li = document.createElement('li');
+    li.textContent = val;
+    document.getElementById('itemList').appendChild(li);
+    input.value = '';
+    input.focus();
+  }
+  document.getElementById('itemInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addItem();
+  });
+
+  // Ex 6 – Slider
+  let imgNum = 1;
+  function nextImage() {
+    imgNum++;
+    document.getElementById('sliderImg').src =
+      `https://picsum.photos/500/500?random=${imgNum}&t=${Date.now()}`;
+  }
+</script>
+
+</body>
+</html>
