@@ -847,26 +847,34 @@
       <div class="panel-label" style="margin-bottom:10px">Code — server.js</div>
       <pre style="font-size:clamp(9px,2.2vw,11px)"><span class="kw">const</span> express = <span class="fn">require</span>(<span class="str">"express"</span>);
 <span class="kw">const</span> fs = <span class="fn">require</span>(<span class="str">"fs"</span>);
+<span class="kw">const</span> path = <span class="fn">require</span>(<span class="str">"path"</span>);
 <span class="kw">const</span> cors = <span class="fn">require</span>(<span class="str">"cors"</span>);
 
 <span class="kw">const</span> app = <span class="fn">express</span>();
 app.<span class="fn">use</span>(<span class="fn">cors</span>());
 app.<span class="fn">use</span>(express.<span class="fn">json</span>());
 
+<span class="kw">const</span> filePath = path.<span class="fn">join</span>(
+  __dirname, <span class="str">"data.json"</span>
+);
+
 app.<span class="fn">post</span>(<span class="str">"/save"</span>, (req, res) =&gt; {
-  <span class="kw">let</span> data = <span class="fn">JSON.parse</span>(
-    fs.<span class="fn">readFileSync</span>(
-      <span class="str">"data.json"</span>, <span class="str">"utf8"</span>
-    ) || <span class="str">"[]"</span>
-  );
+  <span class="kw">let</span> data = [];
+  <span class="kw">if</span> (fs.<span class="fn">existsSync</span>(filePath)) {
+    data = <span class="fn">JSON.parse</span>(
+      fs.<span class="fn">readFileSync</span>(
+        filePath, <span class="str">"utf8"</span>
+      ) || <span class="str">"[]"</span>
+    );
+  }
   data.<span class="fn">push</span>(req.body);
-  fs.<span class="fn">writeFileSync</span>(<span class="str">"data.json"</span>,
+  fs.<span class="fn">writeFileSync</span>(filePath,
     <span class="fn">JSON.stringify</span>(data,<span class="kw">null</span>,<span class="num">2</span>));
   res.<span class="fn">send</span>(<span class="str">"Saved"</span>);
 });
 
 app.<span class="fn">listen</span>(<span class="num">5000</span>, () =&gt;
-  console.<span class="fn">log</span>(<span class="str">"Server on port 5000"</span>));</pre>
+  console.<span class="fn">log</span>(<span class="str">"Server started on port 5000"</span>));</pre>
     </div>
   </div>
 
