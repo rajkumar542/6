@@ -1,506 +1,594 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Big Data Lab Manual</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400&family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --bg: #0a0c10;
-    --surface: #111318;
-    --border: #1e2230;
-    --accent: #00e5ff;
-    --accent2: #7c3aed;
-    --accent3: #10b981;
-    --warn: #f59e0b;
-    --text: #e2e8f0;
-    --muted: #64748b;
-    --code-bg: #0d1117;
-    --code-border: #1e2d3d;
-    --heading: #f8fafc;
-  }
+:root {
+  --bg:        #2c001e;
+  --bg2:       #3a0027;
+  --surface:   #300a24;
+  --surface2:  #3d1232;
+  --border:    #5a2d4e;
+  --orange:    #e95420;
+  --orange2:   #f47421;
+  --green:     #4e9a06;
+  --green2:    #8ae234;
+  --yellow:    #c4a000;
+  --yellow2:   #fce94f;
+  --cyan:      #06989a;
+  --cyan2:     #34e2e2;
+  --white:     #d3d7cf;
+  --white2:    #eeeeec;
+  --muted:     #75507b;
+  --purple2:   #ad5da6;
+  --prompt-user: #4e9a06;
+  --prompt-host: #06989a;
+  --prompt-path: #729fcf;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* WINDOW */
+.terminal-window {
+  max-width: 1080px;
+  margin: 2rem auto;
+  border-radius: 8px 8px 4px 4px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.06);
+}
+.title-bar {
+  background: linear-gradient(180deg, #4a4a4a 0%, #383838 100%);
+  display: flex;
+  align-items: stretch;
+  height: 34px;
+  border-bottom: 1px solid #222;
+  user-select: none;
+}
+.win-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border-right: 1px solid #2a2a2a;
+}
+.wb { width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.35); }
+.wb-close  { background: radial-gradient(circle at 40% 35%, #ff6158, #e0443c); }
+.wb-min    { background: radial-gradient(circle at 40% 35%, #ffbd2e, #d9a71d); }
+.wb-max    { background: radial-gradient(circle at 40% 35%, #28c941, #1dac32); }
+.title-text {
+  flex:1;display:flex;align-items:center;justify-content:center;
+  font-family:'Ubuntu Mono',monospace;font-size:.78rem;color:#ccc;letter-spacing:.03em;
+}
+.menu-bar {
+  background:#3c3c3c;padding:0 8px;display:flex;border-bottom:1px solid #1a1a1a;
+}
+.menu-bar span {
+  font-size:.78rem;color:#d0d0d0;padding:3px 10px;cursor:pointer;border-radius:2px;
+}
+.menu-bar span:hover { background:rgba(255,255,255,.1); }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Syne', sans-serif;
-    line-height: 1.7;
-    min-height: 100vh;
-  }
+/* NAV TABS */
+.tab-bar {
+  background:var(--surface);display:flex;flex-wrap:wrap;gap:2px;
+  padding:6px 8px 0;border-bottom:2px solid var(--orange);
+  position:sticky;top:0;z-index:100;
+}
+.tab {
+  font-family:'Ubuntu Mono',monospace;font-size:.75rem;color:var(--muted);
+  padding:5px 14px;border:1px solid var(--border);border-bottom:none;
+  border-radius:4px 4px 0 0;cursor:pointer;background:var(--bg2);
+  text-decoration:none;transition:background .15s,color .15s;white-space:nowrap;
+}
+.tab:hover,.tab.active { background:var(--orange);color:#fff;border-color:var(--orange); }
 
-  /* ── HEADER ── */
-  header {
-    background: linear-gradient(135deg, #0a0c10 0%, #0f1629 50%, #0a0c10 100%);
-    border-bottom: 1px solid var(--accent);
-    padding: 3rem 2rem 2.5rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  header::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 60% 40% at 20% 50%, rgba(0,229,255,.07) 0%, transparent 70%),
-      radial-gradient(ellipse 50% 60% at 80% 50%, rgba(124,58,237,.06) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .header-badge {
-    display: inline-block;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .75rem;
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    padding: .25rem .8rem;
-    border-radius: 2px;
-    letter-spacing: .12em;
-    margin-bottom: 1.2rem;
-    animation: pulse 3s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%,100%{ box-shadow: 0 0 0 0 rgba(0,229,255,.3); }
-    50%{ box-shadow: 0 0 12px 4px rgba(0,229,255,.15); }
-  }
-  header h1 {
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 800;
-    color: var(--heading);
-    letter-spacing: -.02em;
-    line-height: 1.1;
-  }
-  header h1 span { color: var(--accent); }
-  header p {
-    margin-top: .8rem;
-    color: var(--muted);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .9rem;
-  }
+/* CONTENT */
+.term-body { background:var(--bg); }
+.content { padding:0 0 4rem; }
 
-  /* ── NAV PILLS ── */
-  nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .5rem;
-    justify-content: center;
-    padding: 1.5rem 2rem;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  nav a {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .78rem;
-    color: var(--muted);
-    text-decoration: none;
-    padding: .35rem .9rem;
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    transition: all .2s;
-    letter-spacing: .05em;
-  }
-  nav a:hover {
-    color: var(--accent);
-    border-color: var(--accent);
-    background: rgba(0,229,255,.05);
-  }
+/* SECTION */
+.section {
+  padding:2.5rem 2rem 2rem;
+  border-bottom:1px solid var(--border);
+}
 
-  /* ── MAIN LAYOUT ── */
-  main {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem 6rem;
-  }
+/* SECTION HEADER */
+.sec-head { display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.8rem; }
+.sec-num {
+  font-family:'Ubuntu Mono',monospace;font-size:.7rem;color:var(--bg);
+  background:var(--orange);padding:.2rem .55rem;border-radius:2px;
+  margin-top:.15rem;flex-shrink:0;letter-spacing:.04em;font-weight:700;
+}
+.sec-title-wrap h2 { font-size:1.15rem;font-weight:700;color:var(--white2);letter-spacing:-.01em; }
+.sec-tags { display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem; }
+.tag {
+  font-family:'Ubuntu Mono',monospace;font-size:.65rem;
+  padding:.15rem .5rem;border-radius:2px;letter-spacing:.06em;border:1px solid;
+}
+.tag-o { color:var(--orange2);border-color:var(--orange);background:rgba(233,84,32,.1); }
+.tag-c { color:var(--cyan2);border-color:var(--cyan);background:rgba(6,152,154,.1); }
+.tag-g { color:var(--green2);border-color:var(--green);background:rgba(78,154,6,.1); }
+.tag-y { color:var(--yellow2);border-color:var(--yellow);background:rgba(196,160,0,.1); }
+.tag-p { color:var(--purple2);border-color:#77216f;background:rgba(119,33,111,.1); }
 
-  /* ── EXPERIMENT SECTION ── */
-  .experiment {
-    margin-bottom: 4rem;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-    animation: fadeUp .5s ease both;
-  }
-  @keyframes fadeUp {
-    from{ opacity:0; transform:translateY(20px); }
-    to{ opacity:1; transform:translateY(0); }
-  }
+/* AIM BOX */
+.aim-box {
+  background:var(--surface);border-left:3px solid var(--orange);
+  padding:.85rem 1.1rem;margin-bottom:1.8rem;font-size:.9rem;
+  color:var(--white);border-radius:0 3px 3px 0;
+}
+.aim-box .lbl {
+  font-family:'Ubuntu Mono',monospace;color:var(--orange2);font-size:.7rem;
+  letter-spacing:.1em;display:block;margin-bottom:.25rem;
+}
 
-  .exp-header {
-    padding: 1.5rem 2rem;
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .exp-num {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 2rem;
-    font-weight: 700;
-    line-height: 1;
-    min-width: 3rem;
-  }
-  .exp-meta { flex: 1; }
-  .exp-meta h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--heading);
-  }
-  .exp-meta .tag {
-    display: inline-block;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .7rem;
-    padding: .2rem .6rem;
-    border-radius: 2px;
-    margin-top: .4rem;
-    letter-spacing: .08em;
-  }
+/* HEADINGS inside sections */
+.section h3 {
+  font-size:1rem;font-weight:700;color:var(--white2);
+  margin:1.4rem 0 .5rem;font-family:'Ubuntu',sans-serif;
+}
+.section h4 {
+  font-size:.9rem;font-weight:500;color:var(--cyan2);
+  margin:1rem 0 .4rem;font-family:'Ubuntu Mono',monospace;letter-spacing:.04em;
+}
+.section p { font-size:.9rem;color:var(--white);margin:.4rem 0; }
+.section ul,.section ol { padding-left:1.4rem;margin:.4rem 0; }
+.section li { font-size:.9rem;color:var(--white);margin:.25rem 0; }
+.section strong { color:var(--white2); }
 
-  /* colour themes per experiment */
-  .exp-1 .exp-num { color: #00e5ff; }
-  .exp-1 .exp-header { background: linear-gradient(90deg, rgba(0,229,255,.06), transparent); }
-  .exp-1 .tag { background: rgba(0,229,255,.12); color: #00e5ff; border: 1px solid rgba(0,229,255,.3); }
+/* CODE BLOCKS */
+.codeblock {
+  background:#1a0010;border:1px solid var(--border);
+  border-radius:4px;margin:.5rem 0 .8rem;overflow:hidden;
+}
+.cb-head {
+  background:var(--surface2);padding:.3rem .8rem;display:flex;
+  align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);
+}
+.cb-lang { font-family:'Ubuntu Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase; }
+.cb-copy {
+  font-family:'Ubuntu Mono',monospace;font-size:.65rem;color:var(--muted);
+  cursor:pointer;padding:.1rem .4rem;border:1px solid var(--border);
+  border-radius:2px;background:transparent;transition:color .15s,border-color .15s;
+}
+.cb-copy:hover { color:var(--orange2);border-color:var(--orange); }
+.cb-copy.copied { color:var(--green2);border-color:var(--green); }
+pre { padding:.9rem 1rem;overflow-x:auto;margin:0; }
+code {
+  font-family:'Ubuntu Mono',monospace;font-size:.82rem;
+  line-height:1.65;color:var(--white);
+}
+.kw  { color:var(--cyan2); }
+.str { color:var(--yellow2); }
+.cm  { color:var(--muted);font-style:italic; }
+.fn  { color:var(--green2); }
+.num { color:var(--orange2); }
+.tx  { color:var(--white); }
+.xml-tag  { color:var(--purple2); }
 
-  .exp-2 .exp-num { color: #7c3aed; }
-  .exp-2 .exp-header { background: linear-gradient(90deg, rgba(124,58,237,.06), transparent); }
-  .exp-2 .tag { background: rgba(124,58,237,.12); color: #a78bfa; border: 1px solid rgba(124,58,237,.3); }
+/* NOTE */
+.note {
+  background:rgba(196,160,0,.08);border:1px solid rgba(196,160,0,.3);
+  border-radius:3px;padding:.6rem .9rem;
+  font-family:'Ubuntu Mono',monospace;font-size:.78rem;color:var(--yellow2);margin:.5rem 0;
+}
+.note .nl { color:var(--yellow);margin-right:.4rem; }
 
-  .exp-3 .exp-num { color: #10b981; }
-  .exp-3 .exp-header { background: linear-gradient(90deg, rgba(16,185,129,.06), transparent); }
-  .exp-3 .tag { background: rgba(16,185,129,.12); color: #34d399; border: 1px solid rgba(16,185,129,.3); }
+/* TERMINAL OUTPUT block */
+.term-out {
+  background:#0d0009;border:1px solid var(--border);border-radius:4px;
+  padding:.9rem 1rem;margin:.5rem 0 .8rem;overflow-x:auto;
+}
+.term-out code { color:var(--green2);font-size:.8rem; }
+.term-out .warn { color:var(--yellow2); }
+.term-out .info { color:var(--cyan2); }
 
-  .exp-4 .exp-num { color: #f59e0b; }
-  .exp-4 .exp-header { background: linear-gradient(90deg, rgba(245,158,11,.06), transparent); }
-  .exp-4 .tag { background: rgba(245,158,11,.12); color: #fbbf24; border: 1px solid rgba(245,158,11,.3); }
+/* PROMPT */
+.prompt { display:flex;align-items:baseline;gap:0;font-family:'Ubuntu Mono',monospace;font-size:.8rem;margin:.5rem 0 .1rem; }
+.pu { color:var(--prompt-user);font-weight:700; }
+.ph { color:var(--prompt-host);font-weight:700; }
+.pp { color:var(--prompt-path); }
+.pd { color:var(--white2);margin:0 .3rem; }
 
-  .exp-5 .exp-num { color: #f43f5e; }
-  .exp-5 .exp-header { background: linear-gradient(90deg, rgba(244,63,94,.06), transparent); }
-  .exp-5 .tag { background: rgba(244,63,94,.12); color: #fb7185; border: 1px solid rgba(244,63,94,.3); }
+/* SUMMARY TABLE */
+.summary-section { padding:2.5rem 2rem; }
+.summary-section h2 { font-size:1.1rem;font-weight:700;color:var(--white2);margin-bottom:1.2rem;font-family:'Ubuntu Mono',monospace; }
+.summary-section h2 span { color:var(--orange); }
+table { width:100%;border-collapse:collapse;font-size:.85rem; }
+thead tr { background:var(--surface2);border-bottom:2px solid var(--orange); }
+th { text-align:left;padding:.7rem 1rem;font-family:'Ubuntu Mono',monospace;font-size:.7rem;color:var(--orange2);letter-spacing:.08em;text-transform:uppercase;font-weight:700; }
+td { padding:.65rem 1rem;border-bottom:1px solid var(--border);color:var(--white);vertical-align:top; }
+tr:hover td { background:rgba(255,255,255,.02); }
+tr:last-child td { border-bottom:none; }
+.tn { font-family:'Ubuntu Mono',monospace;color:var(--orange);font-weight:700; }
+.tt { font-family:'Ubuntu Mono',monospace;font-size:.78rem;color:var(--cyan2); }
+.to { color:var(--green2);font-size:.85rem; }
 
-  .exp-6 .exp-num { color: #06b6d4; }
-  .exp-6 .exp-header { background: linear-gradient(90deg, rgba(6,182,212,.06), transparent); }
-  .exp-6 .tag { background: rgba(6,182,212,.12); color: #22d3ee; border: 1px solid rgba(6,182,212,.3); }
+/* STATUS BAR */
+.statusbar {
+  background:var(--orange);padding:.3rem 1rem;display:flex;
+  justify-content:space-between;font-family:'Ubuntu Mono',monospace;
+  font-size:.7rem;color:#fff;letter-spacing:.04em;
+}
 
-  .exp-7 .exp-num { color: #8b5cf6; }
-  .exp-7 .exp-header { background: linear-gradient(90deg, rgba(139,92,246,.06), transparent); }
-  .exp-7 .tag { background: rgba(139,92,246,.12); color: #a78bfa; border: 1px solid rgba(139,92,246,.3); }
-
-  .exp-body { padding: 2rem; }
-
-  /* ── OBJECTIVE ── */
-  .objective {
-    display: flex;
-    gap: .75rem;
-    align-items: flex-start;
-    background: rgba(255,255,255,.02);
-    border-left: 3px solid var(--accent);
-    padding: 1rem 1.2rem;
-    border-radius: 0 2px 2px 0;
-    margin-bottom: 1.8rem;
-    font-size: .95rem;
-  }
-  .objective .icon { font-size: 1.1rem; flex-shrink: 0; margin-top:.1rem; }
-
-  /* ── STEPS ── */
-  .steps { display: flex; flex-direction: column; gap: 1.4rem; }
-
-  .step {
-    display: grid;
-    grid-template-columns: 2.2rem 1fr;
-    gap: .8rem;
-    align-items: start;
-  }
-  .step-num {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .75rem;
-    font-weight: 700;
-    color: var(--bg);
-    background: var(--muted);
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-top: .1rem;
-  }
-  .step-content h3 {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--heading);
-    margin-bottom: .5rem;
-  }
-  .step-content p { color: var(--text); font-size: .92rem; margin-bottom: .6rem; }
-
-  /* ── CODE BLOCKS ── */
-  pre {
-    background: var(--code-bg);
-    border: 1px solid var(--code-border);
-    border-radius: 4px;
-    padding: 1rem 1.2rem;
-    overflow-x: auto;
-    margin: .6rem 0;
-    position: relative;
-  }
-  pre::before {
-    content: attr(data-lang);
-    position: absolute;
-    top: .4rem;
-    right: .7rem;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .65rem;
-    color: var(--muted);
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
-  code {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .83rem;
-    color: #a5f3fc;
-    line-height: 1.6;
-  }
-  .kw { color: #c792ea; }
-  .cm { color: #546e7a; font-style: italic; }
-  .str { color: #c3e88d; }
-  .fn { color: #82aaff; }
-  .num { color: #f78c6c; }
-
-  /* ── NOTE / INFO BOXES ── */
-  .note {
-    background: rgba(245,158,11,.06);
-    border: 1px solid rgba(245,158,11,.25);
-    border-radius: 4px;
-    padding: .8rem 1rem;
-    font-size: .88rem;
-    color: #fbbf24;
-    margin: .6rem 0;
-  }
-  .note strong { margin-right: .4rem; }
-
-  /* ── SUMMARY TABLE ── */
-  .summary-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: .88rem;
-    margin-top: 1rem;
-  }
-  .summary-table th {
-    background: rgba(0,229,255,.08);
-    color: var(--accent);
-    font-family: 'Share Tech Mono', monospace;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    font-size: .72rem;
-    padding: .75rem 1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--accent);
-  }
-  .summary-table td {
-    padding: .7rem 1rem;
-    border-bottom: 1px solid var(--border);
-    color: var(--text);
-  }
-  .summary-table tr:last-child td { border-bottom: none; }
-  .summary-table tr:hover td { background: rgba(255,255,255,.02); }
-
-  /* ── FOOTER ── */
-  footer {
-    text-align: center;
-    padding: 2rem;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .75rem;
-    color: var(--muted);
-    border-top: 1px solid var(--border);
-  }
+/* SCROLLBAR */
+::-webkit-scrollbar { width:6px;height:6px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border);border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--muted); }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="header-badge">BIG DATA LABORATORY</div>
-  <h1>Lab <span>Manual</span></h1>
-  <p>Hadoop · Hive · Pig · MapReduce · HBase · Spark</p>
-</header>
+<div class="terminal-window">
 
-<nav>
-  <a href="#exp1">EX-1 Hadoop Setup</a>
-  <a href="#exp2">EX-2 Word Count</a>
-  <a href="#exp3">EX-3 Weather Analysis</a>
-  <a href="#exp4">EX-4 Hive &amp; Pig</a>
-  <a href="#exp5">EX-5 Visualization</a>
-  <a href="#exp6">EX-6 HBase</a>
-  <a href="#exp7">EX-7 Spark</a>
-  <a href="#summary">Summary</a>
-</nav>
-
-<main>
-
-<!-- ══════════════════════════════════ EX 1 ══ -->
-<section class="experiment exp-1" id="exp1">
-  <div class="exp-header">
-    <div class="exp-num">01</div>
-    <div class="exp-meta">
-      <h2>Hadoop Installation &amp; Configuration</h2>
-      <span class="tag">SETUP · HDFS · YARN</span>
+  <div class="title-bar">
+    <div class="win-buttons">
+      <div class="wb wb-close"></div>
+      <div class="wb wb-min"></div>
+      <div class="wb wb-max"></div>
     </div>
+    <div class="title-text">student@ubuntu: ~/BigData_Lab -- bash -- 120x40</div>
   </div>
-  <div class="exp-body">
-    <div class="objective">
-      <span class="icon">🎯</span>
-      <span>Install and configure a single-node Hadoop cluster on Ubuntu, set up HDFS and YARN, and verify the installation by running a sample job.</span>
+  <div class="menu-bar">
+    <span>File</span><span>Edit</span><span>View</span><span>Search</span><span>Terminal</span><span>Help</span>
+  </div>
+
+  <div class="tab-bar">
+    <a class="tab active" href="#ex1">EX-1 Hadoop</a>
+    <a class="tab" href="#ex2">EX-2 WordCount</a>
+    <a class="tab" href="#ex3">EX-3 Weather</a>
+    <a class="tab" href="#ex4">EX-4 Hive+Pig</a>
+    <a class="tab" href="#ex5">EX-5 Visualize</a>
+    <a class="tab" href="#ex6">EX-6 HBase</a>
+    <a class="tab" href="#ex7">EX-7 Spark</a>
+    <a class="tab" href="#summary">Summary</a>
+  </div>
+
+  <div class="term-body"><div class="content">
+
+  <!-- ==================== EX 1 ==================== -->
+  <section class="section" id="ex1">
+    <div class="sec-head">
+      <div class="sec-num">EX-01</div>
+      <div class="sec-title-wrap">
+        <h2>Hadoop Installation &amp; Configuration</h2>
+        <div class="sec-tags">
+          <span class="tag tag-o">HADOOP</span>
+          <span class="tag tag-c">HDFS</span>
+          <span class="tag tag-g">YARN</span>
+          <span class="tag tag-y">MAPREDUCE</span>
+        </div>
+      </div>
     </div>
-    <div class="steps">
 
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Update System &amp; Install Java</h3>
-          <p>Hadoop requires Java 8 or later. Update the package list and install OpenJDK.</p>
-<pre data-lang="bash"><code>sudo apt-get update
-sudo apt-get install -y openjdk-8-jdk
-java -version</code></pre>
-        </div>
-      </div>
+    <h3>STEP 1 — Install Java (Required)</h3>
+    <p>Hadoop needs Java.</p>
+    <h4>Check if Java already installed:</h4>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>java -version</code></pre></div>
+    <p>If not installed:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>sudo apt update
+sudo apt install openjdk-11-jdk -y</code></pre></div>
+    <p>Verify:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>java -version</code></pre></div>
+    <p>You should see Java 11.</p>
 
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Download &amp; Extract Hadoop</h3>
-<pre data-lang="bash"><code>wget https://downloads.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
-tar -xvzf hadoop-3.3.6.tar.gz
-sudo mv hadoop-3.3.6 /usr/local/hadoop</code></pre>
-        </div>
-      </div>
+    <h3>STEP 2 — Download Hadoop</h3>
+    <p>Go to Downloads folder:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>cd ~/Downloads</code></pre></div>
+    <p>Download:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>wget https://downloads.apache.org/hadoop/common/hadoop-3.4.2/hadoop-3.4.2.tar.gz</code></pre></div>
 
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h3>Configure Environment Variables</h3>
-          <p>Edit <code>~/.bashrc</code> and append the following lines:</p>
-<pre data-lang="bash"><code>export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-export HADOOP_HOME=/usr/local/hadoop
-export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+    <h3>STEP 3 — Extract Hadoop</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>tar -xvzf hadoop-3.4.2.tar.gz</code></pre></div>
+    <p>Move to /usr/local:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>sudo mv hadoop-3.4.2 /usr/local/hadoop</code></pre></div>
+
+    <h3>STEP 4 — Set Environment Variables</h3>
+    <p>Open bashrc:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>nano ~/.bashrc</code></pre></div>
+    <p>Add these lines at the bottom:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>export HADOOP_HOME=/usr/local/hadoop
+export HADOOP_INSTALL=$HADOOP_HOME
 export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
 export YARN_HOME=$HADOOP_HOME
-export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop</code></pre>
-<pre data-lang="bash"><code>source ~/.bashrc</code></pre>
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin</code></pre></div>
+    <p>Save → CTRL + O then CTRL + X</p>
+    <p>Apply changes:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>source ~/.bashrc</code></pre></div>
+
+    <h3>STEP 5 — Configure JAVA_HOME in Hadoop</h3>
+    <p>Find Java path:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>readlink -f $(which java)</code></pre></div>
+    <p>Example output:</p>
+    <div class="term-out"><code>/usr/lib/jvm/java-11-openjdk-amd64/bin/java</code></div>
+    <p>Remove /bin/java part → final path: <code style="color:var(--cyan2)">/usr/lib/jvm/java-11-openjdk-amd64</code></p>
+    <p>Now edit:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>nano /usr/local/hadoop/etc/hadoop/hadoop-env.sh</code></pre></div>
+    <p>Find:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>export JAVA_HOME=</code></pre></div>
+    <p>Change to:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64</code></pre></div>
+    <p>Save &amp; exit.</p>
+
+    <h3>STEP 6 — Test Hadoop Installation</h3>
+    <p>Run:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hadoop version</code></pre></div>
+    <p>You should see Hadoop version info.</p>
+
+    <h3>STEP 7 — Setup Passwordless SSH</h3>
+    <p>Hadoop requires SSH.</p>
+    <h4>Install SSH:</h4>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>sudo apt install openssh-server -y</code></pre></div>
+    <p>Generate key:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>ssh-keygen -t rsa -P ""</code></pre></div>
+    <p>Enable login:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys</code></pre></div>
+    <p>Test:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>ssh localhost</code></pre></div>
+    <p>Type yes once.</p>
+
+    <h3>STEP 8 — Configure Hadoop (Single Node)</h3>
+    <p>Edit core config:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>nano /usr/local/hadoop/etc/hadoop/core-site.xml</code></pre></div>
+    <p>Add inside &lt;configuration&gt;:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">xml</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code><span class="xml-tag">&lt;property&gt;</span>
+  <span class="xml-tag">&lt;name&gt;</span>fs.defaultFS<span class="xml-tag">&lt;/name&gt;</span>
+  <span class="xml-tag">&lt;value&gt;</span>hdfs://localhost:9000<span class="xml-tag">&lt;/value&gt;</span>
+<span class="xml-tag">&lt;/property&gt;</span></code></pre></div>
+    <p>Edit HDFS config:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>nano /usr/local/hadoop/etc/hadoop/hdfs-site.xml</code></pre></div>
+    <p>Add:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">xml</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code><span class="xml-tag">&lt;property&gt;</span>
+  <span class="xml-tag">&lt;name&gt;</span>dfs.replication<span class="xml-tag">&lt;/name&gt;</span>
+  <span class="xml-tag">&lt;value&gt;</span>1<span class="xml-tag">&lt;/value&gt;</span>
+<span class="xml-tag">&lt;/property&gt;</span></code></pre></div>
+
+    <h3>STEP 9 — Format Namenode</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hdfs namenode -format</code></pre></div>
+
+    <h3>STEP 10 — Start Hadoop</h3>
+    <p>Start services:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>start-dfs.sh</code></pre></div>
+    <p>Check running processes:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>jps</code></pre></div>
+    <p>You should see:</p>
+    <div class="term-out"><code>NameNode
+DataNode
+SecondaryNameNode</code></div>
+
+    <h3>STEP 11 — Open Hadoop Web UI</h3>
+    <p>Open browser:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">url</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>http://localhost:9870</code></pre></div>
+
+    <h3>What is MapReduce in Hadoop?</h3>
+    <p>MapReduce = Hadoop's processing engine used to run programs on big data.</p>
+    <p>It works with:</p>
+    <ul>
+      <li>HDFS → stores data</li>
+      <li>MapReduce → processes data</li>
+      <li>YARN → manages resources</li>
+    </ul>
+
+    <h3>STEP 1 — Configure MapReduce</h3>
+    <p>Open configuration file:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>nano /usr/local/hadoop/etc/hadoop/mapred-site.xml</code></pre></div>
+    <p>If file does NOT exist, copy template first:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>cp /usr/local/hadoop/etc/hadoop/mapred-site.xml.template \
+/usr/local/hadoop/etc/hadoop/mapred-site.xml</code></pre></div>
+    <p>Now edit it and add inside &lt;configuration&gt;:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">xml</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code><span class="xml-tag">&lt;property&gt;</span>
+  <span class="xml-tag">&lt;name&gt;</span>mapreduce.framework.name<span class="xml-tag">&lt;/name&gt;</span>
+  <span class="xml-tag">&lt;value&gt;</span>yarn<span class="xml-tag">&lt;/value&gt;</span>
+<span class="xml-tag">&lt;/property&gt;</span></code></pre></div>
+    <p>Save &amp; exit.</p>
+
+    <h3>STEP 2 — Configure YARN</h3>
+    <p>Open:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>nano /usr/local/hadoop/etc/hadoop/yarn-site.xml</code></pre></div>
+    <p>Add inside &lt;configuration&gt;:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">xml</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code><span class="xml-tag">&lt;property&gt;</span>
+  <span class="xml-tag">&lt;name&gt;</span>yarn.nodemanager.aux-services<span class="xml-tag">&lt;/name&gt;</span>
+  <span class="xml-tag">&lt;value&gt;</span>mapreduce_shuffle<span class="xml-tag">&lt;/value&gt;</span>
+<span class="xml-tag">&lt;/property&gt;</span></code></pre></div>
+    <p>Save.</p>
+
+    <h3>STEP 3 — Restart Hadoop</h3>
+    <p>Stop first:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>stop-dfs.sh
+stop-yarn.sh</code></pre></div>
+    <p>Start again:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>start-dfs.sh
+start-yarn.sh</code></pre></div>
+
+    <h3>STEP 4 — Check Services</h3>
+    <p>Run:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>jps</code></pre></div>
+    <p>You should see:</p>
+    <div class="term-out"><code>NameNode
+DataNode
+ResourceManager
+NodeManager
+SecondaryNameNode</code></div>
+    <p>If yes → MapReduce is ready</p>
+
+    <h3>STEP 5 — Run Your FIRST MapReduce Program (WordCount)</h3>
+    <p>Hadoop already provides a sample program.</p>
+    <h4>Create input folder in HDFS</h4>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hdfs dfs -mkdir /input</code></pre></div>
+    <h4>Create sample text file</h4>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>nano sample.txt</code></pre></div>
+    <p>Type:</p>
+    <div class="term-out"><code>hello hadoop
+hello mapreduce
+big data hadoop</code></div>
+    <p>Save.</p>
+    <h4>Upload file to HDFS</h4>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hdfs dfs -put sample.txt /input</code></pre></div>
+    <h4>Run WordCount Program</h4>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hadoop jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.4.2.jar wordcount /input /output</code></pre></div>
+
+    <h3>STEP 6 — View Output</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hdfs dfs -cat /output/part-r-00000</code></pre></div>
+    <p>You will see:</p>
+    <div class="term-out"><code>big         1
+data        1
+hadoop      2
+hello       2
+mapreduce   1</code></div>
+
+    <h3>Useful Web Interfaces</h3>
+    <p>HDFS UI:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">url</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>http://localhost:9870</code></pre></div>
+    <p>YARN UI:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">url</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>http://localhost:8088</code></pre></div>
+
+    <h3>Common Errors &amp; Fixes</h3>
+    <h4>Error: "Connection refused"</h4>
+    <p>Restart Hadoop:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>start-dfs.sh
+start-yarn.sh</code></pre></div>
+    <h4>Error: "output directory exists"</h4>
+    <p>Delete output first:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hdfs dfs -rm -r /output</code></pre></div>
+  </section>
+
+  <!-- ==================== EX 2 ==================== -->
+  <section class="section" id="ex2">
+    <div class="sec-head">
+      <div class="sec-num">EX-02</div>
+      <div class="sec-title-wrap">
+        <h2>Word Frequency Analysis using MapReduce</h2>
+        <div class="sec-tags">
+          <span class="tag tag-o">MAPREDUCE</span>
+          <span class="tag tag-c">JAVA</span>
+          <span class="tag tag-g">HDFS</span>
         </div>
       </div>
-
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h3>Configure Hadoop XML Files</h3>
-          <p><strong>core-site.xml</strong></p>
-<pre data-lang="xml"><code>&lt;configuration&gt;
-  &lt;property&gt;
-    &lt;name&gt;fs.defaultFS&lt;/name&gt;
-    &lt;value&gt;hdfs://localhost:9000&lt;/value&gt;
-  &lt;/property&gt;
-&lt;/configuration&gt;</code></pre>
-          <p><strong>hdfs-site.xml</strong></p>
-<pre data-lang="xml"><code>&lt;configuration&gt;
-  &lt;property&gt;
-    &lt;name&gt;dfs.replication&lt;/name&gt;
-    &lt;value&gt;1&lt;/value&gt;
-  &lt;/property&gt;
-&lt;/configuration&gt;</code></pre>
-          <p><strong>mapred-site.xml</strong></p>
-<pre data-lang="xml"><code>&lt;configuration&gt;
-  &lt;property&gt;
-    &lt;name&gt;mapreduce.framework.name&lt;/name&gt;
-    &lt;value&gt;yarn&lt;/value&gt;
-  &lt;/property&gt;
-&lt;/configuration&gt;</code></pre>
-          <p><strong>yarn-site.xml</strong></p>
-<pre data-lang="xml"><code>&lt;configuration&gt;
-  &lt;property&gt;
-    &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;
-    &lt;value&gt;mapreduce_shuffle&lt;/value&gt;
-  &lt;/property&gt;
-&lt;/configuration&gt;</code></pre>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-content">
-          <h3>Setup SSH &amp; Format HDFS</h3>
-<pre data-lang="bash"><code>sudo apt-get install -y ssh
-ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
-cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-chmod 600 ~/.ssh/authorized_keys
-
-# Format the NameNode
-hdfs namenode -format</code></pre>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">6</div>
-        <div class="step-content">
-          <h3>Start Hadoop &amp; Verify</h3>
-<pre data-lang="bash"><code>start-dfs.sh
-start-yarn.sh
-jps   # should show: NameNode, DataNode, ResourceManager, NodeManager</code></pre>
-          <div class="note"><strong>💡 Web UIs:</strong> NameNode → http://localhost:9870 &nbsp;|&nbsp; YARN → http://localhost:8088</div>
-        </div>
-      </div>
-
     </div>
-  </div>
-</section>
 
-<!-- ══════════════════════════════════ EX 2 ══ -->
-<section class="experiment exp-2" id="exp2">
-  <div class="exp-header">
-    <div class="exp-num">02</div>
-    <div class="exp-meta">
-      <h2>Word Count using MapReduce</h2>
-      <span class="tag">MAPREDUCE · JAVA · HDFS</span>
+    <div class="aim-box">
+      <span class="lbl">AIM</span>
+      To implement a Word Count/Frequency program using the Hadoop MapReduce framework in Java to count the occurrences of each word in a given input text file.
     </div>
-  </div>
-  <div class="exp-body">
-    <div class="objective">
-      <span class="icon">🎯</span>
-      <span>Implement a MapReduce Word Count program in Java, upload input data to HDFS, run the job, and retrieve the output.</span>
-    </div>
-    <div class="steps">
 
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Prepare Input Data</h3>
-<pre data-lang="bash"><code>echo "hadoop is a big data framework hadoop is used widely" > input.txt
-hdfs dfs -mkdir -p /user/hadoop/input
-hdfs dfs -put input.txt /user/hadoop/input/</code></pre>
-        </div>
-      </div>
+    <h3>Procedure</h3>
 
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Java MapReduce Program</h3>
-          <p>Create <code>WordCount.java</code>:</p>
-<pre data-lang="java"><code><span class="kw">import</span> java.io.*;
+    <h4>A. Environment Setup</h4>
+    <div class="term-out"><code><span class="info">cloud@cloud-ThinkCentre-neo-50t-Gen-3:~$</span> cd ~
+<span class="info">cloud@cloud-ThinkCentre-neo-50t-Gen-3:~$</span> hadoop version
+<span class="info">cloud@cloud-ThinkCentre-neo-50t-Gen-3:~$</span> hdfs namenode -format
+namenode is running as process 6526.  Stop it first and ensure /tmp/hadoop-cloud-namenode.pid file is empty before retry.
+<span class="info">cloud@cloud-ThinkCentre-neo-50t-Gen-3:~$</span> jps
+<span class="info">cloud@cloud-ThinkCentre-neo-50t-Gen-3:~$</span> e
+<span class="info">cloud@cloud-ThinkCentre-neo-50t-Gen-3:~$</span> cd /usr/local/hadoop/bin/</code></div>
+    <ul>
+      <li>Start the Hadoop Daemons using <code style="color:var(--cyan2)">./start-all.sh</code></li>
+      <li>Verify services (NameNode, DataNode, etc.) using the <code style="color:var(--cyan2)">jps</code> command.</li>
+    </ul>
+
+    <h4>B. Creating Input Data</h4>
+    <ul>
+      <li>Create a local text file: <code style="color:var(--yellow2)">echo "Hadoop is an open source framework. Hadoop is used for Big Data." &gt; input.txt</code></li>
+      <li>Create an HDFS directory: <code style="color:var(--yellow2)">hadoop fs -mkdir /wordcount_input</code></li>
+      <li>Upload the file: <code style="color:var(--yellow2)">hadoop fs -put input.txt /wordcount_input</code></li>
+    </ul>
+
+    <h4>C. Development &amp; Compilation</h4>
+    <ul>
+      <li>Write the Java source code (WordCount.java) containing the <strong>Mapper</strong>, <strong>Reducer</strong>, and <strong>Driver</strong> classes.</li>
+      <li>Compile the code using the Hadoop classpath:</li>
+    </ul>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>javac -classpath $(hadoop classpath) -d . WordCount.java</code></pre></div>
+    <ul>
+      <li>Package the generated class files into a JAR:</li>
+    </ul>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>jar -cvf wordcount.jar *.class</code></pre></div>
+
+    <h4>D. Execution</h4>
+    <ul>
+      <li>Submit the job to the Hadoop cluster:</li>
+    </ul>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hadoop jar wordcount.jar WordCount /wordcount_input /wordcount_output</code></pre></div>
+
+    <h3>WordCount.java</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">java</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code><span class="kw">import</span> java.io.IOException;
 <span class="kw">import</span> java.util.StringTokenizer;
 <span class="kw">import</span> org.apache.hadoop.conf.Configuration;
 <span class="kw">import</span> org.apache.hadoop.fs.Path;
-<span class="kw">import</span> org.apache.hadoop.io.*;
-<span class="kw">import</span> org.apache.hadoop.mapreduce.*;
-<span class="kw">import</span> org.apache.hadoop.mapreduce.lib.input.*;
-<span class="kw">import</span> org.apache.hadoop.mapreduce.lib.output.*;
+<span class="kw">import</span> org.apache.hadoop.io.IntWritable;
+<span class="kw">import</span> org.apache.hadoop.io.Text;
+<span class="kw">import</span> org.apache.hadoop.mapreduce.Job;
+<span class="kw">import</span> org.apache.hadoop.mapreduce.Mapper;
+<span class="kw">import</span> org.apache.hadoop.mapreduce.Reducer;
+<span class="kw">import</span> org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+<span class="kw">import</span> org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 <span class="kw">public class</span> <span class="fn">WordCount</span> {
 
-  <span class="kw">public static class</span> TokenizerMapper
-      <span class="kw">extends</span> <span class="fn">Mapper</span>&lt;Object, Text, Text, IntWritable&gt; {
-
+  <span class="kw">public static class</span> <span class="fn">TokenizerMapper</span> <span class="kw">extends</span> Mapper&lt;Object, Text, Text, IntWritable&gt; {
     <span class="kw">private final static</span> IntWritable one = <span class="kw">new</span> IntWritable(<span class="num">1</span>);
     <span class="kw">private</span> Text word = <span class="kw">new</span> Text();
 
@@ -514,14 +602,13 @@ hdfs dfs -put input.txt /user/hadoop/input/</code></pre>
     }
   }
 
-  <span class="kw">public static class</span> IntSumReducer
-      <span class="kw">extends</span> <span class="fn">Reducer</span>&lt;Text, IntWritable, Text, IntWritable&gt; {
+  <span class="kw">public static class</span> <span class="fn">IntSumReducer</span> <span class="kw">extends</span> Reducer&lt;Text, IntWritable, Text, IntWritable&gt; {
     <span class="kw">private</span> IntWritable result = <span class="kw">new</span> IntWritable();
 
     <span class="kw">public void</span> <span class="fn">reduce</span>(Text key, Iterable&lt;IntWritable&gt; values, Context context)
         <span class="kw">throws</span> IOException, InterruptedException {
       <span class="kw">int</span> sum = <span class="num">0</span>;
-      <span class="kw">for</span> (IntWritable val : values) sum += val.get();
+      <span class="kw">for</span> (IntWritable val : values) { sum += val.get(); }
       result.set(sum);
       context.write(key, result);
     }
@@ -540,594 +627,703 @@ hdfs dfs -put input.txt /user/hadoop/input/</code></pre>
     FileOutputFormat.setOutputPath(job, <span class="kw">new</span> Path(args[<span class="num">1</span>]));
     System.exit(job.waitForCompletion(<span class="kw">true</span>) ? <span class="num">0</span> : <span class="num">1</span>);
   }
-}</code></pre>
+}</code></pre></div>
+
+    <h3>Output</h3>
+    <p>The output is stored in HDFS in the specified output directory. To view it, use:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hadoop fs -cat /wordcount_output/part-r-00000</code></pre></div>
+    <p>Terminal Display:</p>
+    <div class="term-out"><code>Big         1
+Data.       1
+Hadoop      2
+an          1
+for         1
+framework.  1
+is          2
+open        1
+source      1
+used        1</code></div>
+
+    <h3>Result</h3>
+    <p>The MapReduce program was successfully implemented and executed on the Hadoop cluster. The input text was processed through the Mapping and Reducing phases, and the frequency of each unique word was correctly calculated and stored in the HDFS output directory.</p>
+
+    <h3>Step 1: Fix the Missing NameNode</h3>
+    <p>This usually happens because the temporary storage for the NameNode was cleared or not initialized. Run these commands in your terminal:</p>
+    <ul>
+      <li><strong>Stop the current daemons:</strong> <code style="color:var(--cyan2)">./stop-all.sh</code></li>
+      <li><strong>Format the NameNode</strong> (This initializes the directory structure):</li>
+    </ul>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hdfs namenode -format</code></pre></div>
+    <ul>
+      <li><strong>Restart everything:</strong> <code style="color:var(--cyan2)">./start-all.sh</code></li>
+    </ul>
+
+    <h3>Step 2: Verify Again</h3>
+    <p>Run jps one more time. You must see NameNode in the list now. It should look like this:</p>
+    <div class="term-out"><code>NameNode   &lt;--- Crucial
+DataNode
+ResourceManager
+NodeManager
+SecondaryNameNode</code></div>
+
+    <h3>Pro-Tip: Avoid start-all.sh</h3>
+    <p>While start-all.sh is convenient for learning, it is technically deprecated (outdated). The "modern" way to start Hadoop is to keep the storage and the resource management separate:</p>
+    <ul>
+      <li><strong>Start Storage (HDFS):</strong> <code style="color:var(--cyan2)">start-dfs.sh</code></li>
+      <li><strong>Start Processing (YARN):</strong> <code style="color:var(--cyan2)">start-yarn.sh</code></li>
+    </ul>
+  </section>
+
+  <!-- ==================== EX 3 ==================== -->
+  <section class="section" id="ex3">
+    <div class="sec-head">
+      <div class="sec-num">EX-03</div>
+      <div class="sec-title-wrap">
+        <h2>Weather Data Analysis using MapReduce</h2>
+        <div class="sec-tags">
+          <span class="tag tag-g">MAPREDUCE</span>
+          <span class="tag tag-c">JAVA</span>
+          <span class="tag tag-y">DATA ANALYSIS</span>
         </div>
       </div>
-
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h3>Compile &amp; Package</h3>
-<pre data-lang="bash"><code>mkdir -p wordcount_classes
-javac -classpath $(hadoop classpath) -d wordcount_classes WordCount.java
-jar -cvf wordcount.jar -C wordcount_classes/ .</code></pre>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h3>Run the MapReduce Job</h3>
-<pre data-lang="bash"><code>hadoop jar wordcount.jar WordCount \
-  /user/hadoop/input \
-  /user/hadoop/output</code></pre>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-content">
-          <h3>View Output</h3>
-<pre data-lang="bash"><code>hdfs dfs -cat /user/hadoop/output/part-r-00000</code></pre>
-          <div class="note"><strong>Expected:</strong> Each word followed by its frequency count.</div>
-        </div>
-      </div>
-
     </div>
-  </div>
-</section>
 
-<!-- ══════════════════════════════════ EX 3 ══ -->
-<section class="experiment exp-3" id="exp3">
-  <div class="exp-header">
-    <div class="exp-num">03</div>
-    <div class="exp-meta">
-      <h2>Weather Data Analysis using MapReduce</h2>
-      <span class="tag">MAPREDUCE · DATA ANALYSIS · HDFS</span>
+    <div class="aim-box">
+      <span class="lbl">AIM</span>
+      To implement a MapReduce program in Java to process a weather dataset and find the Maximum Temperature for every year recorded in the data.
     </div>
-  </div>
-  <div class="exp-body">
-    <div class="objective">
-      <span class="icon">🎯</span>
-      <span>Analyse weather dataset using Hadoop MapReduce to find the maximum and minimum temperature recorded per year.</span>
-    </div>
-    <div class="steps">
 
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Sample Weather Dataset (NCDC format)</h3>
-          <p>Create <code>weather.txt</code> with tab-separated year and temperature fields:</p>
-<pre data-lang="text"><code>1901  34
-1902  22
-1901  -3
-1902  40
-1901  29
-1902  15</code></pre>
-<pre data-lang="bash"><code>hdfs dfs -mkdir -p /weather/input
-hdfs dfs -put weather.txt /weather/input/</code></pre>
-        </div>
-      </div>
+    <h3>Procedure</h3>
 
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Mapper Class</h3>
-<pre data-lang="java"><code><span class="kw">import</span> java.io.IOException;
-<span class="kw">import</span> org.apache.hadoop.io.*;
+    <h4>A. Dataset Preparation</h4>
+    <ul>
+      <li>Create a local dataset file named weather.txt. The format should be Year &lt;space&gt; Temperature:</li>
+    </ul>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>echo -e "2020 35\n2020 32\n2021 40\n2021 38\n2022 42\n2022 39" > weather.txt</code></pre></div>
+    <ul>
+      <li>Upload to HDFS:</li>
+    </ul>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hadoop fs -mkdir /weather_input
+hadoop fs -put weather.txt /weather_input</code></pre></div>
+
+    <h4>B. Development &amp; Compilation</h4>
+    <ul>
+      <li>Write the Java source code (MaxTemperature.java).</li>
+      <li>Compile:</li>
+    </ul>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>javac -classpath $(hadoop classpath) -d . MaxTemperature.java</code></pre></div>
+    <ul>
+      <li>Create JAR:</li>
+    </ul>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>jar -cvf weather.jar *.class</code></pre></div>
+
+    <h4>C. Execution</h4>
+    <ul>
+      <li>Run the job on the Hadoop cluster:</li>
+    </ul>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hadoop jar weather.jar MaxTemperature /weather_input /weather_output</code></pre></div>
+
+    <h3>PROGRAM: MaxTemperature.java</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">java</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code><span class="kw">import</span> java.io.IOException;
+<span class="kw">import</span> org.apache.hadoop.conf.Configuration;
+<span class="kw">import</span> org.apache.hadoop.fs.Path;
+<span class="kw">import</span> org.apache.hadoop.io.IntWritable;
+<span class="kw">import</span> org.apache.hadoop.io.LongWritable;
+<span class="kw">import</span> org.apache.hadoop.io.Text;
+<span class="kw">import</span> org.apache.hadoop.mapreduce.Job;
 <span class="kw">import</span> org.apache.hadoop.mapreduce.Mapper;
-
-<span class="kw">public class</span> WeatherMapper
-    <span class="kw">extends</span> <span class="fn">Mapper</span>&lt;LongWritable, Text, Text, IntWritable&gt; {
-
-  <span class="kw">public void</span> <span class="fn">map</span>(LongWritable key, Text value, Context context)
-      <span class="kw">throws</span> IOException, InterruptedException {
-    String line = value.toString();
-    String year = line.substring(<span class="num">0</span>, <span class="num">4</span>);
-    <span class="kw">int</span> temp = Integer.parseInt(line.substring(<span class="num">5</span>).trim());
-    context.write(<span class="kw">new</span> Text(year), <span class="kw">new</span> IntWritable(temp));
-  }
-}</code></pre>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h3>Reducer Class</h3>
-<pre data-lang="java"><code><span class="kw">import</span> java.io.IOException;
-<span class="kw">import</span> org.apache.hadoop.io.*;
 <span class="kw">import</span> org.apache.hadoop.mapreduce.Reducer;
+<span class="kw">import</span> org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+<span class="kw">import</span> org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-<span class="kw">public class</span> WeatherReducer
-    <span class="kw">extends</span> <span class="fn">Reducer</span>&lt;Text, IntWritable, Text, IntWritable&gt; {
+<span class="kw">public class</span> <span class="fn">MaxTemperature</span> {
 
-  <span class="kw">public void</span> <span class="fn">reduce</span>(Text key, Iterable&lt;IntWritable&gt; values, Context context)
-      <span class="kw">throws</span> IOException, InterruptedException {
-    <span class="kw">int</span> maxTemp = Integer.MIN_VALUE;
-    <span class="kw">for</span> (IntWritable val : values)
-      <span class="kw">if</span> (val.get() > maxTemp) maxTemp = val.get();
-    context.write(key, <span class="kw">new</span> IntWritable(maxTemp));
+  <span class="cm">// MAPPER CLASS</span>
+  <span class="kw">public static class</span> <span class="fn">MaxTempMapper</span> <span class="kw">extends</span> Mapper&lt;LongWritable, Text, Text, IntWritable&gt; {
+    @Override
+    <span class="kw">public void</span> <span class="fn">map</span>(LongWritable key, Text value, Context context)
+        <span class="kw">throws</span> IOException, InterruptedException {
+      String line = value.toString();
+      String[] parts = line.split(<span class="str">"\\s+"</span>); <span class="cm">// Handles one or more spaces</span>
+      <span class="kw">if</span> (parts.length >= <span class="num">2</span>) {
+        String year = parts[<span class="num">0</span>];
+        <span class="kw">try</span> {
+          <span class="kw">int</span> airTemperature = Integer.parseInt(parts[<span class="num">1</span>]);
+          context.write(<span class="kw">new</span> Text(year), <span class="kw">new</span> IntWritable(airTemperature));
+        } <span class="kw">catch</span> (NumberFormatException e) {
+          <span class="cm">// Skip lines with bad temperature data</span>
+        }
+      }
+    }
   }
-}</code></pre>
+
+  <span class="cm">// REDUCER CLASS</span>
+  <span class="kw">public static class</span> <span class="fn">MaxTempReducer</span> <span class="kw">extends</span> Reducer&lt;Text, IntWritable, Text, IntWritable&gt; {
+    @Override
+    <span class="kw">public void</span> <span class="fn">reduce</span>(Text key, Iterable&lt;IntWritable&gt; values, Context context)
+        <span class="kw">throws</span> IOException, InterruptedException {
+      <span class="kw">int</span> maxValue = Integer.MIN_VALUE;
+      <span class="kw">for</span> (IntWritable value : values) {
+        maxValue = Math.max(maxValue, value.get());
+      }
+      context.write(key, <span class="kw">new</span> IntWritable(maxValue));
+    }
+  }
+
+  <span class="cm">// MAIN METHOD</span>
+  <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) <span class="kw">throws</span> Exception {
+    <span class="kw">if</span> (args.length != <span class="num">2</span>) {
+      System.err.println(<span class="str">"Usage: MaxTemperature &lt;input path&gt; &lt;output path&gt;"</span>);
+      System.exit(<span class="num">-1</span>);
+    }
+    Configuration conf = <span class="kw">new</span> Configuration();
+    Job job = Job.getInstance(conf, <span class="str">"Max Temperature"</span>);
+    job.setJarByClass(MaxTemperature.<span class="kw">class</span>);
+    job.setMapperClass(MaxTempMapper.<span class="kw">class</span>);
+    job.setReducerClass(MaxTempReducer.<span class="kw">class</span>);
+    job.setOutputKeyClass(Text.<span class="kw">class</span>);
+    job.setOutputValueClass(IntWritable.<span class="kw">class</span>);
+    FileInputFormat.addInputPath(job, <span class="kw">new</span> Path(args[<span class="num">0</span>]));
+    FileOutputFormat.setOutputPath(job, <span class="kw">new</span> Path(args[<span class="num">1</span>]));
+    System.exit(job.waitForCompletion(<span class="kw">true</span>) ? <span class="num">0</span> : <span class="num">1</span>);
+  }
+}</code></pre></div>
+
+    <p>Clear the old file and save the new one:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>nano MaxTemperature.java</code></pre></div>
+    <p>(Delete everything and paste the code above).</p>
+
+    <p>Compile:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>export HADOOP_CLASSPATH=$(hadoop classpath)
+javac -classpath ${HADOOP_CLASSPATH} -d . MaxTemperature.java</code></pre></div>
+
+    <p>Create JAR:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>jar cf mt.jar MaxTemperature*.class</code></pre></div>
+
+    <p>Run the Job:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hadoop jar mt.jar MaxTemperature /weather_input /weather_output_final</code></pre></div>
+
+    <h3>Terminal Execution</h3>
+    <div class="term-out"><code><span class="warn">cloud@cloud-ThinkCentre-neo-50t-Gen-3:~$</span> where hadoop
+where: command not found
+<span class="warn">cloud@cloud-ThinkCentre-neo-50t-Gen-3:~$</span> cd ~
+<span class="warn">cloud@cloud-ThinkCentre-neo-50t-Gen-3:~$</span> hadoop version
+Hadoop 3.3.6
+Source code repository https://github.com/apache/hadoop.git -r 1be78238728da9266a4f88195058f08fd012bf9c
+Compiled by ubuntu on 2023-06-18T08:22Z
+Compiled on platform linux-x86_64
+Compiled with protoc 3.7.1
+From source with checksum 5652179ad55f76cb287d9c633bb53bbd
+This command was run using /usr/local/hadoop/share/hadoop/common/hadoop-common-3.3.6.jar
+<span class="warn">cloud@cloud-ThinkCentre-neo-50t-Gen-3:~$</span> which hadoop
+/usr/local/hadoop/bin/hadoop
+<span class="warn">cloud@cloud-ThinkCentre-neo-50t-Gen-3:~$</span> cd /usr/local/hadoop/bin/
+<span class="warn">cloud@cloud-ThinkCentre-neo-50t-Gen-3:/usr/local/hadoop/bin$</span> jps
+10996 NodeManager
+13126 Jps
+10104 DataNode
+9897 NameNode
+10617 ResourceManager
+10362 SecondaryNameNode
+<span class="warn">cloud@cloud-ThinkCentre-neo-50t-Gen-3:/usr/local/hadoop/bin$</span> mkdir weather_mr &amp;&amp; cd weather_mr
+<span class="warn">cloud@cloud-ThinkCentre-neo-50t-Gen-3:/usr/local/hadoop/bin/weather_mr$</span> nano MaxTemperature.java
+<span class="warn">cloud@cloud-ThinkCentre-neo-50t-Gen-3:/usr/local/hadoop/bin/weather_mr$</span> echo -e "2020 35\n2020 32\n2021 40\n2021 38\n2022 42\n2022 39" &gt; weather.txt
+<span class="warn">cloud@cloud-ThinkCentre-neo-50t-Gen-3:/usr/local/hadoop/bin/weather_mr$</span> hdfs dfs -put weather.txt /weather_input
+2026-03-31 10:36:37,798 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+<span class="warn">cloud@cloud-ThinkCentre-neo-50t-Gen-3:/usr/local/hadoop/bin/weather_mr$</span> export HADOOP_CLASSPATH=$(hadoop classpath)
+<span class="warn">cloud@cloud-ThinkCentre-neo-50t-Gen-3:/usr/local/hadoop/bin/weather_mr$</span> javac -classpath ${HADOOP_CLASSPATH} -d . MaxTemperature.java
+<span class="warn">cloud@cloud-ThinkCentre-neo-50t-Gen-3:/usr/local/hadoop/bin/weather_mr$</span> jar cf mt.jar MaxTemperature*.class
+<span class="warn">cloud@cloud-ThinkCentre-neo-50t-Gen-3:/usr/local/hadoop/bin/weather_mr$</span> hadoop jar mt.jar MaxTemperature /weather_input /weather_output
+2026-03-31 10:44:07,817 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+2026-03-31 10:44:08,067 INFO impl.MetricsConfig: Loaded properties from hadoop-metrics2.properties
+2026-03-31 10:44:08,107 INFO impl.MetricsSystemImpl: Scheduled Metric snapshot period at 10 second(s).
+2026-03-31 10:44:08,107 INFO impl.MetricsSystemImpl: JobTracker metrics system started
+...
+2026-03-31 10:44:09,373 INFO mapreduce.Job:  map 100% reduce 100%
+2026-03-31 10:44:09,375 INFO mapreduce.Job: Job job_local632096694_0001 completed successfully
+<span class="warn">cloud@cloud-ThinkCentre-neo-50t-Gen-3:/usr/local/hadoop/bin/weather_mr$</span> hdfs dfs -cat /weather_output/part-r-00000
+2026-03-31 10:44:19,798 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+2020    35
+2021    40
+2022    42</code></div>
+  </section>
+
+  <!-- ==================== EX 4 ==================== -->
+  <section class="section" id="ex4">
+    <div class="sec-head">
+      <div class="sec-num">EX-04</div>
+      <div class="sec-title-wrap">
+        <h2>Hive and Pig Installation</h2>
+        <div class="sec-tags">
+          <span class="tag tag-y">HIVE</span>
+          <span class="tag tag-p">PIG</span>
+          <span class="tag tag-c">SQL ON HADOOP</span>
         </div>
       </div>
-
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h3>Driver Class &amp; Run</h3>
-<pre data-lang="java"><code>Job job = Job.getInstance(conf, <span class="str">"MaxTemperature"</span>);
-job.setMapperClass(WeatherMapper.<span class="kw">class</span>);
-job.setReducerClass(WeatherReducer.<span class="kw">class</span>);
-job.setOutputKeyClass(Text.<span class="kw">class</span>);
-job.setOutputValueClass(IntWritable.<span class="kw">class</span>);</code></pre>
-<pre data-lang="bash"><code>hadoop jar weather.jar WeatherDriver /weather/input /weather/output
-hdfs dfs -cat /weather/output/part-r-00000</code></pre>
-          <div class="note"><strong>Expected Output:</strong>&nbsp; 1901 → 34 &nbsp;|&nbsp; 1902 → 40</div>
-        </div>
-      </div>
-
     </div>
-  </div>
-</section>
 
-<!-- ══════════════════════════════════ EX 4 ══ -->
-<section class="experiment exp-4" id="exp4">
-  <div class="exp-header">
-    <div class="exp-num">04</div>
-    <div class="exp-meta">
-      <h2>Hive &amp; Pig Installation and Queries</h2>
-      <span class="tag">HIVE · PIG · SQL · DATAFLOW</span>
+    <h3>PART 1 — HIVE INSTALLATION</h3>
+    <p>(Hive = SQL on Hadoop)</p>
+
+    <h3>STEP 1 — Download Hive</h3>
+    <p>Go to Downloads:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>cd ~/Downloads</code></pre></div>
+    <p>Download Hive:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>wget https://downloads.apache.org/hive/hive-4.0.1/apache-hive-4.0.1-bin.tar.gz</code></pre></div>
+
+    <h3>STEP 2 — Extract Hive</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>tar -xvzf apache-hive-4.0.1-bin.tar.gz</code></pre></div>
+    <p>Move to /usr/local:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>sudo mv apache-hive-4.0.1-bin /usr/local/hive</code></pre></div>
+
+    <h3>STEP 3 — Set Environment Variables</h3>
+    <p>Open bashrc:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>nano ~/.bashrc</code></pre></div>
+    <p>Add at bottom:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>export HIVE_HOME=/usr/local/hive
+export PATH=$PATH:$HIVE_HOME/bin</code></pre></div>
+    <p>Apply:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>source ~/.bashrc</code></pre></div>
+
+    <h3>STEP 4 — Configure Hive</h3>
+    <p>Create config file:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>cd $HIVE_HOME/conf
+cp hive-default.xml.template hive-site.xml</code></pre></div>
+
+    <h3>STEP 5 — Install MySQL (Metastore DB)</h3>
+    <p>Hive needs a database.</p>
+    <p>Install MySQL:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>sudo apt install mysql-server -y</code></pre></div>
+    <p>Login:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>sudo mysql</code></pre></div>
+    <p>Create DB:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">sql</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code><span class="kw">CREATE DATABASE</span> hive;
+<span class="kw">CREATE USER</span> <span class="str">'hiveuser'</span>@<span class="str">'localhost'</span> <span class="kw">IDENTIFIED BY</span> <span class="str">'hivepassword'</span>;
+<span class="kw">GRANT ALL PRIVILEGES ON</span> hive.* <span class="kw">TO</span> <span class="str">'hiveuser'</span>@<span class="str">'localhost'</span>;
+<span class="kw">FLUSH PRIVILEGES</span>;
+<span class="kw">EXIT</span>;</code></pre></div>
+
+    <h3>STEP 6 — Download MySQL Connector</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>cd ~/Downloads
+wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-8.3.0.tar.gz</code></pre></div>
+    <p>Extract:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>tar -xvzf mysql-connector-j-8.3.0.tar.gz</code></pre></div>
+    <p>Copy jar:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>cp mysql-connector-j-8.3.0/mysql-connector-j-8.3.0.jar $HIVE_HOME/lib/</code></pre></div>
+
+    <h3>STEP 7 — Configure hive-site.xml</h3>
+    <p>Edit:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>nano $HIVE_HOME/conf/hive-site.xml</code></pre></div>
+    <p>Add inside &lt;configuration&gt;:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">xml</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code><span class="xml-tag">&lt;property&gt;</span>
+  <span class="xml-tag">&lt;name&gt;</span>javax.jdo.option.ConnectionURL<span class="xml-tag">&lt;/name&gt;</span>
+  <span class="xml-tag">&lt;value&gt;</span>jdbc:mysql://localhost:3306/hive?createDatabaseIfNotExist=true<span class="xml-tag">&lt;/value&gt;</span>
+<span class="xml-tag">&lt;/property&gt;</span>
+
+<span class="xml-tag">&lt;property&gt;</span>
+  <span class="xml-tag">&lt;name&gt;</span>javax.jdo.option.ConnectionDriverName<span class="xml-tag">&lt;/name&gt;</span>
+  <span class="xml-tag">&lt;value&gt;</span>com.mysql.cj.jdbc.Driver<span class="xml-tag">&lt;/value&gt;</span>
+<span class="xml-tag">&lt;/property&gt;</span>
+
+<span class="xml-tag">&lt;property&gt;</span>
+  <span class="xml-tag">&lt;name&gt;</span>javax.jdo.option.ConnectionUserName<span class="xml-tag">&lt;/name&gt;</span>
+  <span class="xml-tag">&lt;value&gt;</span>hiveuser<span class="xml-tag">&lt;/value&gt;</span>
+<span class="xml-tag">&lt;/property&gt;</span>
+
+<span class="xml-tag">&lt;property&gt;</span>
+  <span class="xml-tag">&lt;name&gt;</span>javax.jdo.option.ConnectionPassword<span class="xml-tag">&lt;/name&gt;</span>
+  <span class="xml-tag">&lt;value&gt;</span>hivepassword<span class="xml-tag">&lt;/value&gt;</span>
+<span class="xml-tag">&lt;/property&gt;</span></code></pre></div>
+    <p>Save.</p>
+
+    <h3>STEP 8 — Initialize Metastore</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>schematool -dbType mysql -initSchema</code></pre></div>
+    <p>You should see:</p>
+    <div class="term-out"><code>schemaTool completed</code></div>
+
+    <h3>STEP 9 — Start Hive</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hive</code></pre></div>
+    <p>If successful, you will see:</p>
+    <div class="term-out"><code>hive&gt;</code></div>
+    <p>Test:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">hive</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>show databases;</code></pre></div>
+    <p>Hive installed!</p>
+
+    <h3>PART 2 — PIG INSTALLATION</h3>
+    <p>(Pig = scripting language for Hadoop)</p>
+
+    <h3>STEP 1 — Download Pig</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>cd ~/Downloads
+wget https://downloads.apache.org/pig/pig-0.17.0/pig-0.17.0.tar.gz</code></pre></div>
+
+    <h3>STEP 2 — Extract Pig</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>tar -xvzf pig-0.17.0.tar.gz</code></pre></div>
+    <p>Move:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>sudo mv pig-0.17.0 /usr/local/pig</code></pre></div>
+
+    <h3>STEP 3 — Set Environment Variables</h3>
+    <p>Edit bashrc:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>nano ~/.bashrc</code></pre></div>
+    <p>Add:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>export PIG_HOME=/usr/local/pig
+export PATH=$PATH:$PIG_HOME/bin</code></pre></div>
+    <p>Apply:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>source ~/.bashrc</code></pre></div>
+
+    <h3>STEP 4 — Test Pig</h3>
+    <p>Start Pig:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>pig</code></pre></div>
+    <p>You should see:</p>
+    <div class="term-out"><code>grunt&gt;</code></div>
+    <p>Pig installed!</p>
+
+    <h3>Run First Pig Program</h3>
+    <p>Create file:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>nano data.txt</code></pre></div>
+    <p>Add:</p>
+    <div class="term-out"><code>1,Alice
+2,Bob
+3,Charlie</code></div>
+    <p>Upload to HDFS:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hdfs dfs -put data.txt /input</code></pre></div>
+    <p>Run Pig:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>pig</code></pre></div>
+    <p>Inside Pig:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">pig latin</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>A = LOAD <span class="str">'/input/data.txt'</span> USING PigStorage(<span class="str">','</span>) AS (id:int,name:chararray);
+DUMP A;</code></pre></div>
+    <p>You will see data printed.</p>
+    <p>DONE — Hive + Pig Installed</p>
+  </section>
+
+  <!-- ==================== EX 5 ==================== -->
+  <section class="section" id="ex5">
+    <div class="sec-head">
+      <div class="sec-num">EX-05</div>
+      <div class="sec-title-wrap">
+        <h2>Data Visualization using Hadoop Output</h2>
+        <div class="sec-tags">
+          <span class="tag tag-o">JFREECHART</span>
+          <span class="tag tag-c">JAVA</span>
+          <span class="tag tag-g">VISUALIZATION</span>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="exp-body">
-    <div class="objective">
-      <span class="icon">🎯</span>
-      <span>Install Apache Hive and Apache Pig, create tables/scripts, and execute queries to process structured and semi-structured data.</span>
+
+    <div class="aim-box">
+      <span class="lbl">OBJECTIVE</span>
+      Visualize Hadoop processed data (e.g., Word Count output)
     </div>
-    <div class="steps">
 
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Install Apache Hive</h3>
-<pre data-lang="bash"><code>wget https://downloads.apache.org/hive/hive-3.1.3/apache-hive-3.1.3-bin.tar.gz
-tar -xvzf apache-hive-3.1.3-bin.tar.gz
-sudo mv apache-hive-3.1.3-bin /usr/local/hive
+    <h3>Step 1: Run a Hadoop Job (Word Count)</h3>
+    <p>If not already done:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar wordcount input output</code></pre></div>
 
-# Add to ~/.bashrc
-export HIVE_HOME=/usr/local/hive
-export PATH=$PATH:$HIVE_HOME/bin</code></pre>
-        </div>
-      </div>
+    <h3>Step 2: View Output</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hdfs dfs -cat output/part-r-00000</code></pre></div>
+    <p>Example:</p>
+    <div class="term-out"><code>hadoop  10
+big     5
+data    8</code></div>
 
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Configure Hive Metastore</h3>
-<pre data-lang="bash"><code># Initialize schema (uses Derby by default)
-schematool -initSchema -dbType derby
-hive   # launch Hive shell</code></pre>
-        </div>
-      </div>
+    <h3>Step 3: Export Output to Local System</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hdfs dfs -get output/part-r-00000 wc_output.txt</code></pre></div>
 
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h3>HiveQL — Create Table &amp; Load Data</h3>
-<pre data-lang="sql"><code><span class="kw">CREATE TABLE</span> students (
-  id     INT,
-  name   STRING,
-  dept   STRING,
-  marks  FLOAT
-)
-<span class="kw">ROW FORMAT DELIMITED</span>
-<span class="kw">FIELDS TERMINATED BY</span> <span class="str">','</span>
-<span class="kw">STORED AS TEXTFILE</span>;
+    <h3>Step 4: Java Program for Visualization (Simple Bar Chart using Java)</h3>
+    <p>Install JFreeChart:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>sudo apt-get install libjfreechart-java</code></pre></div>
 
-<span class="kw">LOAD DATA LOCAL INPATH</span> <span class="str">'/home/user/students.csv'</span>
-<span class="kw">INTO TABLE</span> students;
-
-<span class="kw">SELECT</span> dept, <span class="fn">AVG</span>(marks) <span class="kw">AS</span> avg_marks
-<span class="kw">FROM</span> students
-<span class="kw">GROUP BY</span> dept;</code></pre>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h3>Install Apache Pig</h3>
-<pre data-lang="bash"><code>wget https://downloads.apache.org/pig/pig-0.17.0/pig-0.17.0.tar.gz
-tar -xvzf pig-0.17.0.tar.gz
-sudo mv pig-0.17.0 /usr/local/pig
-
-export PIG_HOME=/usr/local/pig
-export PATH=$PATH:$PIG_HOME/bin</code></pre>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-content">
-          <h3>Pig Latin Script — Word Frequency</h3>
-<pre data-lang="pig"><code>-- Load file
-lines = LOAD <span class="str">'/user/hadoop/input/input.txt'</span>
-        AS (line:chararray);
-
--- Tokenise
-words = FOREACH lines
-        GENERATE FLATTEN(TOKENIZE(line)) AS word;
-
--- Group and count
-grp   = GROUP words BY word;
-freq  = FOREACH grp
-        GENERATE group AS word, COUNT(words) AS cnt;
-
--- Sort and dump
-sorted = ORDER freq BY cnt DESC;
-DUMP sorted;</code></pre>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════ EX 5 ══ -->
-<section class="experiment exp-5" id="exp5">
-  <div class="exp-header">
-    <div class="exp-num">05</div>
-    <div class="exp-meta">
-      <h2>Data Visualization using Hadoop Output</h2>
-      <span class="tag">JFREECHART · JAVA · VISUALIZATION</span>
-    </div>
-  </div>
-  <div class="exp-body">
-    <div class="objective">
-      <span class="icon">🎯</span>
-      <span>Export Hadoop MapReduce word count output and visualize it as a bar chart using JFreeChart in Java.</span>
-    </div>
-    <div class="steps">
-
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Run Word Count &amp; Export Output</h3>
-<pre data-lang="bash"><code>hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar \
-  wordcount input output
-
-hdfs dfs -cat output/part-r-00000
-
-# Export to local filesystem
-hdfs dfs -get output/part-r-00000 wc_output.txt</code></pre>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Install JFreeChart</h3>
-<pre data-lang="bash"><code>sudo apt-get install -y libjfreechart-java</code></pre>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h3>Java Visualization Program</h3>
-<pre data-lang="java"><code><span class="kw">import</span> java.io.*;
+    <h3>Step 5: Java Code</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">java</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code><span class="kw">import</span> java.io.*;
 <span class="kw">import</span> org.jfree.chart.*;
 <span class="kw">import</span> org.jfree.chart.plot.*;
 <span class="kw">import</span> org.jfree.data.category.*;
 
-<span class="kw">public class</span> HadoopVisualization {
+<span class="kw">public class</span> <span class="fn">HadoopVisualization</span> {
   <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) <span class="kw">throws</span> Exception {
     DefaultCategoryDataset dataset = <span class="kw">new</span> DefaultCategoryDataset();
-
     BufferedReader br = <span class="kw">new</span> BufferedReader(<span class="kw">new</span> FileReader(<span class="str">"wc_output.txt"</span>));
     String line;
     <span class="kw">while</span> ((line = br.readLine()) != <span class="kw">null</span>) {
       String[] parts = line.split(<span class="str">"\\s+"</span>);
       dataset.addValue(Integer.parseInt(parts[<span class="num">1</span>]), <span class="str">"Words"</span>, parts[<span class="num">0</span>]);
     }
-    br.close();
-
     JFreeChart chart = ChartFactory.createBarChart(
-      <span class="str">"Word Count"</span>, <span class="str">"Words"</span>, <span class="str">"Frequency"</span>,
-      dataset, PlotOrientation.VERTICAL,
-      <span class="kw">false</span>, <span class="kw">true</span>, <span class="kw">false</span>
-    );
-    ChartUtils.saveChartAsJPEG(
-      <span class="kw">new</span> File(<span class="str">"chart.jpg"</span>), chart, <span class="num">800</span>, <span class="num">600</span>
-    );
-    System.out.println(<span class="str">"Chart created: chart.jpg"</span>);
+      <span class="str">"Word Count"</span>,
+      <span class="str">"Words"</span>,
+      <span class="str">"Frequency"</span>,
+      dataset,
+      PlotOrientation.VERTICAL,
+      <span class="kw">false</span>, <span class="kw">true</span>, <span class="kw">false</span>);
+    ChartUtils.saveChartAsJPEG(<span class="kw">new</span> File(<span class="str">"chart.jpg"</span>), chart, <span class="num">800</span>, <span class="num">600</span>);
+    System.out.println(<span class="str">"Chart created!"</span>);
   }
-}</code></pre>
+}</code></pre></div>
+
+    <h3>Step 6: Compile &amp; Run</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>javac -cp /usr/share/java/jfreechart.jar:/usr/share/java/jcommon.jar HadoopVisualization.java
+java -cp .:/usr/share/java/jfreechart.jar:/usr/share/java/jcommon.jar HadoopVisualization</code></pre></div>
+  </section>
+
+  <!-- ==================== EX 6 ==================== -->
+  <section class="section" id="ex6">
+    <div class="sec-head">
+      <div class="sec-num">EX-06</div>
+      <div class="sec-title-wrap">
+        <h2>Store Big Data in HBase / MongoDB</h2>
+        <div class="sec-tags">
+          <span class="tag tag-c">HBASE</span>
+          <span class="tag tag-o">NOSQL</span>
+          <span class="tag tag-g">JAVA API</span>
         </div>
       </div>
-
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h3>Compile &amp; Run</h3>
-<pre data-lang="bash"><code>javac -cp /usr/share/java/jfreechart.jar:/usr/share/java/jcommon.jar \
-  HadoopVisualization.java
-
-java -cp .:/usr/share/java/jfreechart.jar:/usr/share/java/jcommon.jar \
-  HadoopVisualization</code></pre>
-          <div class="note"><strong>Output:</strong> A JPEG bar chart <code>chart.jpg</code> is created in the current directory.</div>
-        </div>
-      </div>
-
     </div>
-  </div>
-</section>
 
-<!-- ══════════════════════════════════ EX 6 ══ -->
-<section class="experiment exp-6" id="exp6">
-  <div class="exp-header">
-    <div class="exp-num">06</div>
-    <div class="exp-meta">
-      <h2>Store Big Data in HBase using Java API</h2>
-      <span class="tag">HBASE · NOSQL · JAVA</span>
-    </div>
-  </div>
-  <div class="exp-body">
-    <div class="objective">
-      <span class="icon">🎯</span>
-      <span>Start HBase, create a table via the HBase shell, insert records using the Java API, and verify data retrieval.</span>
-    </div>
-    <div class="steps">
+    <p>We'll focus on HBase using Java API (recommended for lab)</p>
 
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Start HBase</h3>
-<pre data-lang="bash"><code>start-hbase.sh
-hbase shell</code></pre>
-        </div>
-      </div>
+    <h3>Step 1: Start HBase</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>start-hbase.sh</code></pre></div>
 
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Create Table in HBase Shell</h3>
-<pre data-lang="hbase"><code>create 'student', 'info'
-list   # verify table exists</code></pre>
-        </div>
-      </div>
+    <h3>Step 2: Open HBase Shell</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>hbase shell</code></pre></div>
+    <p>Create table:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">hbase</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>create 'student', 'info'</code></pre></div>
 
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h3>Java Program — Insert &amp; Read Data</h3>
-<pre data-lang="java"><code><span class="kw">import</span> org.apache.hadoop.conf.Configuration;
+    <h3>Step 3: Java Code to Insert Data</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">java</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code><span class="kw">import</span> org.apache.hadoop.conf.Configuration;
 <span class="kw">import</span> org.apache.hadoop.hbase.*;
 <span class="kw">import</span> org.apache.hadoop.hbase.client.*;
 <span class="kw">import</span> org.apache.hadoop.hbase.util.Bytes;
 
-<span class="kw">public class</span> HBaseExample {
+<span class="kw">public class</span> <span class="fn">HBaseExample</span> {
   <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) <span class="kw">throws</span> Exception {
     Configuration config = HBaseConfiguration.create();
     Connection connection = ConnectionFactory.createConnection(config);
     Table table = connection.getTable(TableName.valueOf(<span class="str">"student"</span>));
-
-    <span class="cm">// Insert row</span>
     Put p = <span class="kw">new</span> Put(Bytes.toBytes(<span class="str">"1"</span>));
     p.addColumn(Bytes.toBytes(<span class="str">"info"</span>), Bytes.toBytes(<span class="str">"name"</span>), Bytes.toBytes(<span class="str">"Abirami"</span>));
     p.addColumn(Bytes.toBytes(<span class="str">"info"</span>), Bytes.toBytes(<span class="str">"dept"</span>), Bytes.toBytes(<span class="str">"CSE"</span>));
     table.put(p);
     System.out.println(<span class="str">"Data Inserted"</span>);
-
-    <span class="cm">// Read row</span>
-    Get g = <span class="kw">new</span> Get(Bytes.toBytes(<span class="str">"1"</span>));
-    Result r = table.get(g);
-    System.out.println(<span class="str">"Name: "</span> +
-      Bytes.toString(r.getValue(Bytes.toBytes(<span class="str">"info"</span>), Bytes.toBytes(<span class="str">"name"</span>))));
-
     table.close();
     connection.close();
   }
-}</code></pre>
+}</code></pre></div>
+
+    <h3>Step 4: Compile</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>javac -cp $(hbase classpath) HBaseExample.java</code></pre></div>
+
+    <h3>Step 5: Run</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>java -cp .:$(hbase classpath) HBaseExample</code></pre></div>
+
+    <h3>Step 6: Verify in HBase Shell</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">hbase</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>scan 'student'</code></pre></div>
+  </section>
+
+  <!-- ==================== EX 7 ==================== -->
+  <section class="section" id="ex7">
+    <div class="sec-head">
+      <div class="sec-num">EX-07</div>
+      <div class="sec-title-wrap">
+        <h2>Apache Spark Cluster Setup &amp; Run Application</h2>
+        <div class="sec-tags">
+          <span class="tag tag-o">SPARK</span>
+          <span class="tag tag-c">RDD API</span>
+          <span class="tag tag-g">JAVA</span>
+          <span class="tag tag-y">DISTRIBUTED</span>
         </div>
       </div>
-
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h3>Compile &amp; Run</h3>
-<pre data-lang="bash"><code>javac -cp $(hbase classpath) HBaseExample.java
-java  -cp .:$(hbase classpath) HBaseExample</code></pre>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-content">
-          <h3>Verify in HBase Shell</h3>
-<pre data-lang="hbase"><code>scan 'student'
-get 'student', '1'</code></pre>
-        </div>
-      </div>
-
     </div>
-  </div>
-</section>
 
-<!-- ══════════════════════════════════ EX 7 ══ -->
-<section class="experiment exp-7" id="exp7">
-  <div class="exp-header">
-    <div class="exp-num">07</div>
-    <div class="exp-meta">
-      <h2>Apache Spark Cluster Setup &amp; Word Count</h2>
-      <span class="tag">SPARK · RDD · DISTRIBUTED</span>
-    </div>
-  </div>
-  <div class="exp-body">
-    <div class="objective">
-      <span class="icon">🎯</span>
-      <span>Download and configure Apache Spark, start a standalone cluster, write a Word Count application using Java RDD API, and submit it via spark-submit.</span>
-    </div>
-    <div class="steps">
+    <h3>Step 1: Download Spark</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>wget https://downloads.apache.org/spark/spark-3.5.0/spark-3.5.0-bin-hadoop3.tgz
+tar -xvf spark-3.5.0-bin-hadoop3.tgz</code></pre></div>
 
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Download &amp; Extract Spark</h3>
-<pre data-lang="bash"><code>wget https://downloads.apache.org/spark/spark-3.5.0/spark-3.5.0-bin-hadoop3.tgz
-tar -xvf spark-3.5.0-bin-hadoop3.tgz</code></pre>
-        </div>
-      </div>
+    <h3>Step 2: Set Environment Variables</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>nano ~/.bashrc</code></pre></div>
+    <p>Add:</p>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>export SPARK_HOME=~/spark-3.5.0-bin-hadoop3
+export PATH=$PATH:$SPARK_HOME/bin</code></pre></div>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>source ~/.bashrc</code></pre></div>
 
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Set Environment Variables</h3>
-<pre data-lang="bash"><code># Add to ~/.bashrc
-export SPARK_HOME=~/spark-3.5.0-bin-hadoop3
-export PATH=$PATH:$SPARK_HOME/bin
-source ~/.bashrc</code></pre>
-        </div>
-      </div>
+    <h3>Step 3: Start Spark</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>start-master.sh
+start-worker.sh spark://localhost:7077</code></pre></div>
 
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h3>Start Spark Cluster</h3>
-<pre data-lang="bash"><code>start-master.sh
-start-worker.sh spark://localhost:7077
-
-# Web UI at http://localhost:8080</code></pre>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h3>Spark Word Count — Java Program</h3>
-<pre data-lang="java"><code><span class="kw">import</span> org.apache.spark.api.java.*;
+    <h3>Step 4: Java Spark Program (Word Count)</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">java</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code><span class="kw">import</span> org.apache.spark.api.java.*;
 <span class="kw">import</span> org.apache.spark.SparkConf;
 <span class="kw">import</span> scala.Tuple2;
 
-<span class="kw">public class</span> SparkWordCount {
+<span class="kw">public class</span> <span class="fn">SparkWordCount</span> {
   <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {
-    SparkConf conf = <span class="kw">new</span> SparkConf()
-      .setAppName(<span class="str">"WordCount"</span>)
-      .setMaster(<span class="str">"local"</span>);
+    SparkConf conf = <span class="kw">new</span> SparkConf().setAppName(<span class="str">"WordCount"</span>).setMaster(<span class="str">"local"</span>);
     JavaSparkContext sc = <span class="kw">new</span> JavaSparkContext(conf);
-
     JavaRDD&lt;String&gt; input = sc.textFile(<span class="str">"input.txt"</span>);
-
-    JavaRDD&lt;String&gt; words = input.flatMap(
-      x -> java.util.Arrays.asList(x.split(<span class="str">" "</span>)).iterator()
-    );
-
+    JavaRDD&lt;String&gt; words = input.flatMap(x -&gt; java.util.Arrays.asList(x.split(<span class="str">" "</span>)).iterator());
     JavaPairRDD&lt;String, Integer&gt; counts = words
-      .mapToPair(x -> <span class="kw">new</span> Tuple2&lt;&gt;(x, <span class="num">1</span>))
-      .reduceByKey((a, b) -> a + b);
-
+      .mapToPair(x -&gt; <span class="kw">new</span> Tuple2&lt;&gt;(x, <span class="num">1</span>))
+      .reduceByKey((a, b) -&gt; a + b);
     counts.saveAsTextFile(<span class="str">"spark_output"</span>);
     sc.close();
   }
-}</code></pre>
-        </div>
-      </div>
+}</code></pre></div>
 
-      <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-content">
-          <h3>Compile, Package &amp; Submit</h3>
-<pre data-lang="bash"><code>javac -cp "$SPARK_HOME/jars/*" SparkWordCount.java
-jar cvf SparkWordCount.jar SparkWordCount.class
+    <h3>Step 5: Compile</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>javac -cp "$SPARK_HOME/jars/*" SparkWordCount.java</code></pre></div>
 
-spark-submit \
-  --class SparkWordCount \
-  --master local \
-  SparkWordCount.jar</code></pre>
-        </div>
-      </div>
+    <h3>Step 6: Run</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>spark-submit --class SparkWordCount --master local . SparkWordCount</code></pre></div>
 
-      <div class="step">
-        <div class="step-num">6</div>
-        <div class="step-content">
-          <h3>View Output</h3>
-<pre data-lang="bash"><code>cat spark_output/part-00000</code></pre>
-          <div class="note"><strong>Note:</strong> Spark is significantly faster than MapReduce for iterative computations due to in-memory processing.</div>
-        </div>
-      </div>
+    <h3>Step 7: View Output</h3>
+    <div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="copyCode(this)">copy</button></div>
+<pre><code>cat spark_output/part-00000</code></pre></div>
+  </section>
 
-    </div>
+  <!-- ==================== SUMMARY ==================== -->
+  <section class="summary-section" id="summary">
+    <h2><span>$</span> experiment_summary</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Experiment</th>
+          <th>Tool Used</th>
+          <th>Outcome</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tn">1</td>
+          <td class="tt">Hadoop + Java</td>
+          <td class="to">Hadoop single-node cluster installed and configured</td>
+        </tr>
+        <tr>
+          <td class="tn">2</td>
+          <td class="tt">MapReduce + Java</td>
+          <td class="to">Word frequency count from input text file</td>
+        </tr>
+        <tr>
+          <td class="tn">3</td>
+          <td class="tt">MapReduce + Java</td>
+          <td class="to">Maximum temperature per year extracted</td>
+        </tr>
+        <tr>
+          <td class="tn">4</td>
+          <td class="tt">Hive + Pig</td>
+          <td class="to">Hive and Pig installed and verified</td>
+        </tr>
+        <tr>
+          <td class="tn">5</td>
+          <td class="tt">Hadoop + Java</td>
+          <td class="to">Visualized output (chart)</td>
+        </tr>
+        <tr>
+          <td class="tn">6</td>
+          <td class="tt">HBase + Java</td>
+          <td class="to">Stored &amp; retrieved data</td>
+        </tr>
+        <tr>
+          <td class="tn">7</td>
+          <td class="tt">Spark + Java</td>
+          <td class="to">Distributed processing</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  </div></div><!-- /content /term-body -->
+
+  <div class="statusbar">
+    <span>student@ubuntu:~/BigData_Lab</span>
+    <span>Big Data Lab Manual -- 7 Experiments</span>
+    <span>Ubuntu 22.04 LTS</span>
   </div>
-</section>
 
-<!-- ══════════════════════════════════ SUMMARY ══ -->
-<section id="summary" style="margin-top:3rem;">
-  <h2 style="font-size:1.4rem;color:var(--heading);margin-bottom:1.2rem;font-weight:800;">
-    📋 Experiment Summary
-  </h2>
-  <table class="summary-table">
-    <thead>
-      <tr>
-        <th>Exp</th>
-        <th>Title</th>
-        <th>Tools Used</th>
-        <th>Outcome</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td style="color:var(--accent);font-family:'Share Tech Mono',monospace">01</td>
-        <td>Hadoop Installation</td>
-        <td>Hadoop 3.x, Java, SSH</td>
-        <td>Single-node cluster running HDFS + YARN</td>
-      </tr>
-      <tr>
-        <td style="color:#a78bfa;font-family:'Share Tech Mono',monospace">02</td>
-        <td>Word Count</td>
-        <td>MapReduce, Java, HDFS</td>
-        <td>Frequency count of words in text file</td>
-      </tr>
-      <tr>
-        <td style="color:#34d399;font-family:'Share Tech Mono',monospace">03</td>
-        <td>Weather Data Analysis</td>
-        <td>MapReduce, Java, HDFS</td>
-        <td>Max/min temperature per year extracted</td>
-      </tr>
-      <tr>
-        <td style="color:#fbbf24;font-family:'Share Tech Mono',monospace">04</td>
-        <td>Hive &amp; Pig</td>
-        <td>Apache Hive, Apache Pig</td>
-        <td>SQL queries &amp; dataflow scripts on datasets</td>
-      </tr>
-      <tr>
-        <td style="color:#fb7185;font-family:'Share Tech Mono',monospace">05</td>
-        <td>Data Visualization</td>
-        <td>Hadoop + Java + JFreeChart</td>
-        <td>Bar chart rendered from MapReduce output</td>
-      </tr>
-      <tr>
-        <td style="color:#22d3ee;font-family:'Share Tech Mono',monospace">06</td>
-        <td>HBase Storage</td>
-        <td>Apache HBase, Java API</td>
-        <td>Inserted and retrieved NoSQL records</td>
-      </tr>
-      <tr>
-        <td style="color:#a78bfa;font-family:'Share Tech Mono',monospace">07</td>
-        <td>Apache Spark</td>
-        <td>Spark 3.x, Java RDD API</td>
-        <td>Distributed word count via in-memory processing</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+</div><!-- /terminal-window -->
 
-</main>
-
-<footer>
-  Big Data Laboratory Manual &nbsp;·&nbsp; Hadoop · Hive · Pig · HBase · Spark
-</footer>
-
+<script>
+function copyCode(btn) {
+  const pre = btn.closest('.codeblock').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 1800);
+  });
+}
+const sections = document.querySelectorAll('.section, .summary-section');
+const tabs = document.querySelectorAll('.tab');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tabs.forEach(t => t.classList.remove('active'));
+      const m = document.querySelector(`.tab[href="#${e.target.id}"]`);
+      if (m) m.classList.add('active');
+    }
+  });
+}, { threshold: 0.25 });
+sections.forEach(s => observer.observe(s));
+</script>
 </body>
 </html>
