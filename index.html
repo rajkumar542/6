@@ -3,1290 +3,1131 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>React Code Examples</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+<title>Big Data Lab Manual</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
 <style>
   :root {
-    --bg: #0d0d0f;
-    --surface: #16161a;
-    --card: #1c1c22;
-    --border: #2a2a35;
-    --accent: #ff6b35;
-    --accent2: #00d4aa;
-    --accent3: #a855f7;
-    --text: #e8e8f0;
-    --muted: #888899;
-    --code-bg: #111118;
+    --bg: #0a0c10;
+    --surface: #111318;
+    --border: #1e2230;
+    --accent: #00e5ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --warn: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --code-bg: #0d1117;
+    --code-border: #1e2d3d;
+    --heading: #f8fafc;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
 
   body {
     background: var(--bg);
     color: var(--text);
     font-family: 'Syne', sans-serif;
+    line-height: 1.7;
     min-height: 100vh;
-    padding: 24px 12px 60px;
-    -webkit-text-size-adjust: 100%;
   }
 
-  /* ── HEADER ─────────────────────────────────── */
-  header { text-align: center; margin-bottom: 40px; padding: 0 8px; }
-
-  header .badge {
-    display: inline-block;
-    background: var(--accent);
-    color: #fff;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    padding: 4px 12px;
-    border-radius: 2px;
-    text-transform: uppercase;
-    margin-bottom: 14px;
-  }
-
-  header h1 {
-    font-size: clamp(22px, 7vw, 52px);
-    font-weight: 800;
-    line-height: 1.15;
-    background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  header p {
-    color: var(--muted);
-    font-size: clamp(11px, 3vw, 15px);
-    margin-top: 8px;
-    font-family: 'JetBrains Mono', monospace;
-    word-break: break-all;
-  }
-
-  /* ── CONTAINER ──────────────────────────────── */
-  .container {
-    max-width: 1000px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-  }
-
-  /* ── EXAMPLE BLOCK ──────────────────────────── */
-  .example-block {
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    background: var(--card);
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0a0c10 0%, #0f1629 50%, #0a0c10 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
     position: relative;
+    overflow: hidden;
   }
-
-  .example-block::before {
+  header::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--accent-line, var(--accent));
-    z-index: 1;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 50%, rgba(0,229,255,.07) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 50%, rgba(124,58,237,.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-badge {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .75rem;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: .25rem .8rem;
+    border-radius: 2px;
+    letter-spacing: .12em;
+    margin-bottom: 1.2rem;
+    animation: pulse 3s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100%{ box-shadow: 0 0 0 0 rgba(0,229,255,.3); }
+    50%{ box-shadow: 0 0 12px 4px rgba(0,229,255,.15); }
+  }
+  header h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: var(--heading);
+    letter-spacing: -.02em;
+    line-height: 1.1;
+  }
+  header h1 span { color: var(--accent); }
+  header p {
+    margin-top: .8rem;
+    color: var(--muted);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .9rem;
   }
 
-  /* ── BLOCK HEADER ───────────────────────────── */
-  .block-header {
+  /* ── NAV PILLS ── */
+  nav {
     display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
     flex-wrap: wrap;
+    gap: .5rem;
+    justify-content: center;
+    padding: 1.5rem 2rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .78rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: .35rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    transition: all .2s;
+    letter-spacing: .05em;
+  }
+  nav a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(0,229,255,.05);
   }
 
-  .step-num {
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    background: var(--accent-line, var(--accent));
-    color: #fff;
-    font-family: 'JetBrains Mono', monospace;
+  /* ── MAIN LAYOUT ── */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+
+  /* ── EXPERIMENT SECTION ── */
+  .experiment {
+    margin-bottom: 4rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    animation: fadeUp .5s ease both;
+  }
+  @keyframes fadeUp {
+    from{ opacity:0; transform:translateY(20px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  .exp-header {
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .exp-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 2rem;
     font-weight: 700;
-    font-size: 13px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
+    line-height: 1;
+    min-width: 3rem;
+  }
+  .exp-meta { flex: 1; }
+  .exp-meta h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--heading);
+  }
+  .exp-meta .tag {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .7rem;
+    padding: .2rem .6rem;
+    border-radius: 2px;
+    margin-top: .4rem;
+    letter-spacing: .08em;
   }
 
-  .block-title { font-size: clamp(13px, 3.5vw, 16px); font-weight: 700; }
-  .block-subtitle {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(9px, 2.5vw, 11px);
-    color: var(--muted);
-    margin-top: 2px;
-    word-break: break-word;
-  }
+  /* colour themes per experiment */
+  .exp-1 .exp-num { color: #00e5ff; }
+  .exp-1 .exp-header { background: linear-gradient(90deg, rgba(0,229,255,.06), transparent); }
+  .exp-1 .tag { background: rgba(0,229,255,.12); color: #00e5ff; border: 1px solid rgba(0,229,255,.3); }
 
-  /* ── SPLIT LAYOUT ───────────────────────────── */
-  .split {
+  .exp-2 .exp-num { color: #7c3aed; }
+  .exp-2 .exp-header { background: linear-gradient(90deg, rgba(124,58,237,.06), transparent); }
+  .exp-2 .tag { background: rgba(124,58,237,.12); color: #a78bfa; border: 1px solid rgba(124,58,237,.3); }
+
+  .exp-3 .exp-num { color: #10b981; }
+  .exp-3 .exp-header { background: linear-gradient(90deg, rgba(16,185,129,.06), transparent); }
+  .exp-3 .tag { background: rgba(16,185,129,.12); color: #34d399; border: 1px solid rgba(16,185,129,.3); }
+
+  .exp-4 .exp-num { color: #f59e0b; }
+  .exp-4 .exp-header { background: linear-gradient(90deg, rgba(245,158,11,.06), transparent); }
+  .exp-4 .tag { background: rgba(245,158,11,.12); color: #fbbf24; border: 1px solid rgba(245,158,11,.3); }
+
+  .exp-5 .exp-num { color: #f43f5e; }
+  .exp-5 .exp-header { background: linear-gradient(90deg, rgba(244,63,94,.06), transparent); }
+  .exp-5 .tag { background: rgba(244,63,94,.12); color: #fb7185; border: 1px solid rgba(244,63,94,.3); }
+
+  .exp-6 .exp-num { color: #06b6d4; }
+  .exp-6 .exp-header { background: linear-gradient(90deg, rgba(6,182,212,.06), transparent); }
+  .exp-6 .tag { background: rgba(6,182,212,.12); color: #22d3ee; border: 1px solid rgba(6,182,212,.3); }
+
+  .exp-7 .exp-num { color: #8b5cf6; }
+  .exp-7 .exp-header { background: linear-gradient(90deg, rgba(139,92,246,.06), transparent); }
+  .exp-7 .tag { background: rgba(139,92,246,.12); color: #a78bfa; border: 1px solid rgba(139,92,246,.3); }
+
+  .exp-body { padding: 2rem; }
+
+  /* ── OBJECTIVE ── */
+  .objective {
+    display: flex;
+    gap: .75rem;
+    align-items: flex-start;
+    background: rgba(255,255,255,.02);
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.2rem;
+    border-radius: 0 2px 2px 0;
+    margin-bottom: 1.8rem;
+    font-size: .95rem;
+  }
+  .objective .icon { font-size: 1.1rem; flex-shrink: 0; margin-top:.1rem; }
+
+  /* ── STEPS ── */
+  .steps { display: flex; flex-direction: column; gap: 1.4rem; }
+
+  .step {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2.2rem 1fr;
+    gap: .8rem;
+    align-items: start;
   }
-
-  .panel { padding: 16px; min-width: 0; }
-
-  .panel + .panel { border-left: 1px solid var(--border); }
-
-  .panel-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 12px;
+  .step-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--bg);
+    background: var(--muted);
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: .1rem;
   }
+  .step-content h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--heading);
+    margin-bottom: .5rem;
+  }
+  .step-content p { color: var(--text); font-size: .92rem; margin-bottom: .6rem; }
 
-  /* ── CODE ───────────────────────────────────── */
+  /* ── CODE BLOCKS ── */
   pre {
     background: var(--code-bg);
-    border-radius: 8px;
-    padding: 12px;
+    border: 1px solid var(--code-border);
+    border-radius: 4px;
+    padding: 1rem 1.2rem;
     overflow-x: auto;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(10px, 2.2vw, 12px);
-    line-height: 1.7;
-    border: 1px solid var(--border);
-    white-space: pre;
-    word-break: normal;
-    -webkit-overflow-scrolling: touch;
+    margin: .6rem 0;
+    position: relative;
   }
-
-  .kw  { color: #c792ea; }
-  .fn  { color: #82aaff; }
-  .str { color: #c3e88d; }
-  .cmt { color: #546e7a; font-style: italic; }
-  .num { color: #f78c6c; }
-  .tag { color: #00d4aa; }
-
-  /* ── OUTPUT BOX ─────────────────────────────── */
-  .output-box {
-    background: #fff;
-    border-radius: 8px;
-    padding: 16px;
-    min-height: 100px;
-    border: 1px solid #ddd;
-    font-family: Arial, sans-serif;
-    color: #000;
-    overflow: hidden;
-  }
-
-  /* Example 1 */
-  .click-box {
-    width: 100%; height: 120px;
-    border: 8px dashed #d61b1b;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    cursor: pointer; user-select: none;
-    border-radius: 4px; transition: background 0.15s;
-  }
-  .click-box:hover, .click-box:active { background: #fff5f5; }
-  .click-box h1 { font-size: clamp(14px, 4vw, 20px); margin: 3px 0; color: #111; text-align:center; }
-
-  /* Example 2 */
-  .msg-box h2 { font-size: clamp(13px, 3.5vw, 18px); margin-bottom: 6px; color: #111; }
-
-  /* Example 3 form */
-  .form-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
-  .form-box input {
-    border: 1px solid #ccc; padding: 7px 10px;
-    border-radius: 4px; font-size: 14px; outline: none;
-    flex: 1; min-width: 100px;
-  }
-  .form-box button {
-    padding: 7px 14px;
-    background: #007bff; color: #fff;
-    border: none; border-radius: 4px; cursor: pointer;
-    font-size: 13px; white-space: nowrap;
-  }
-  .form-box p { font-size: 12px; color: #555; margin-top: 6px; }
-
-  .form-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0;
-    flex-wrap: wrap;
-  }
-
-  /* Example 4 */
-  .num-box input {
-    border: 1px solid #ccc; padding: 7px 10px;
-    border-radius: 4px; font-size: 14px;
-    width: 100%; max-width: 200px; outline: none;
-  }
-  .num-box p { margin-top: 10px; font-size: 14px; color: #333; font-weight: 600; }
-  .num-box h2 { margin-bottom: 10px; color: #111; font-size: clamp(14px, 4vw, 18px); }
-
-  /* Example 5 */
-  .list-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
-  .list-box input {
-    border: 1px solid #ccc; padding: 7px 10px;
-    border-radius: 4px; font-size: 14px;
-    flex: 1; min-width: 100px; outline: none;
-  }
-  .list-box button {
-    padding: 7px 14px;
-    background: #28a745; color: #fff;
-    border: none; border-radius: 4px; cursor: pointer; font-size: 13px;
-  }
-  .list-box ul { margin-top: 8px; padding-left: 18px; color: #333; font-size: 13px; }
-  .list-box h2 { margin-bottom: 8px; color: #111; font-size: clamp(14px, 4vw, 18px); }
-
-  .list-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0;
-  }
-
-  /* Example 6 */
-  .slider-box { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-  .slider-box img {
-    width: 100%; max-width: 180px; height: auto; aspect-ratio: 4/3;
-    object-fit: cover; border-radius: 6px; border: 2px solid #ddd;
-  }
-  .slider-box button {
-    padding: 7px 18px; background: #333; color: #fff;
-    border: none; border-radius: 4px; cursor: pointer; font-size: 13px;
-  }
-  .slider-box h2 { color: #111; font-size: clamp(14px, 4vw, 18px); }
-
-  /* ── SERVER STEPS ───────────────────────────── */
-  .server-section { margin-top: 14px; }
-  .server-section .section-title {
-    font-size: 11px; font-weight: 700; color: var(--accent2);
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase;
-  }
-  .step-list { display: flex; flex-direction: column; gap: 10px; }
-  .step-item { display: flex; gap: 10px; align-items: flex-start; }
-  .step-dot {
-    width: 20px; height: 20px; border-radius: 50%;
-    background: var(--accent2); color: #000;
-    font-size: 10px; font-weight: 700;
-    font-family: 'JetBrains Mono', monospace;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; margin-top: 2px;
-  }
-  .step-content p { font-size: clamp(11px, 3vw, 13px); color: var(--text); margin-bottom: 5px; line-height: 1.5; }
-  .step-content code {
-    display: block; background: var(--code-bg);
-    border: 1px solid var(--border); border-radius: 6px;
-    padding: 8px 12px; font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(10px, 2.5vw, 12px); color: var(--accent2);
-    overflow-x: auto; -webkit-overflow-scrolling: touch;
-  }
-
-  .divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
-
-  .data-box {
-    background: var(--code-bg); border: 1px solid var(--border);
-    border-radius: 6px; padding: 10px 12px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(10px, 2.5vw, 12px); color: var(--accent2);
-    margin-top: 6px; overflow-x: auto; word-break: break-all;
-  }
-
-  /* ── FOLDER STRUCTURE ───────────────────────── */
-  .folder-tree {
-    margin-top: 10px; background: #0d0d0f;
-    border: 1px solid #2a2a35; border-radius: 8px;
-    padding: 12px; font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(10px, 2.5vw, 12px); line-height: 1.9;
-    overflow-x: auto; -webkit-overflow-scrolling: touch;
-  }
-
-  /* ── EXPLANATION ────────────────────────────── */
-  .explanation {
-    border-top: 1px solid var(--border);
-    padding: 18px 16px;
-    background: rgba(255,255,255,0.02);
-  }
-
-  .explanation-title {
-    font-size: clamp(9px, 2.5vw, 11px);
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--accent-line, var(--accent));
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .explanation-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  .explain-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-    gap: 10px;
-  }
-
-  .explain-card {
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 14px;
-    border-left: 3px solid var(--accent-line, var(--accent));
-  }
-
-  .explain-card .card-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(8px, 2vw, 10px);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--accent-line, var(--accent));
-    margin-bottom: 4px;
-  }
-
-  .explain-card .card-title {
-    font-size: clamp(12px, 3vw, 13px);
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 5px;
-  }
-
-  .explain-card .card-body {
-    font-size: clamp(11px, 2.8vw, 12.5px);
+  pre::before {
+    content: attr(data-lang);
+    position: absolute;
+    top: .4rem;
+    right: .7rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .65rem;
     color: var(--muted);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  code {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .83rem;
+    color: #a5f3fc;
     line-height: 1.6;
   }
+  .kw { color: #c792ea; }
+  .cm { color: #546e7a; font-style: italic; }
+  .str { color: #c3e88d; }
+  .fn { color: #82aaff; }
+  .num { color: #f78c6c; }
 
-  .explain-card .card-body code {
-    background: #1e1e2a;
-    padding: 1px 4px;
-    border-radius: 3px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(9px, 2.2vw, 11px);
-    color: var(--accent2);
-    word-break: break-all;
+  /* ── NOTE / INFO BOXES ── */
+  .note {
+    background: rgba(245,158,11,.06);
+    border: 1px solid rgba(245,158,11,.25);
+    border-radius: 4px;
+    padding: .8rem 1rem;
+    font-size: .88rem;
+    color: #fbbf24;
+    margin: .6rem 0;
   }
+  .note strong { margin-right: .4rem; }
 
-  /* ── FLOW ───────────────────────────────────── */
-  .explain-flow {
-    margin-top: 12px;
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 14px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  /* ── SUMMARY TABLE ── */
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .88rem;
+    margin-top: 1rem;
   }
-
-  .explain-flow .flow-title {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(8px, 2vw, 10px);
-    letter-spacing: 2px;
+  .summary-table th {
+    background: rgba(0,229,255,.08);
+    color: var(--accent);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: .06em;
     text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 10px;
+    font-size: .72rem;
+    padding: .75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--accent);
   }
-
-  .flow-steps {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    align-items: center;
-  }
-
-  .flow-step {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 5px 10px;
-    font-size: clamp(10px, 2.5vw, 12px);
+  .summary-table td {
+    padding: .7rem 1rem;
+    border-bottom: 1px solid var(--border);
     color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    white-space: nowrap;
   }
+  .summary-table tr:last-child td { border-bottom: none; }
+  .summary-table tr:hover td { background: rgba(255,255,255,.02); }
 
-  .flow-arrow {
-    color: var(--accent-line, var(--accent));
-    font-size: 14px;
-    font-weight: 700;
-    padding: 0 2px;
-    flex-shrink: 0;
-  }
-
-  /* ════════════════════════════════════════════
-     RESPONSIVE — SPLIT PANELS (≤680px)
-  ════════════════════════════════════════════ */
-  @media (max-width: 680px) {
-    .split { grid-template-columns: 1fr; }
-    .panel + .panel { border-left: none; border-top: 1px solid var(--border); }
-  }
-
-  /* ════════════════════════════════════════════
-     RESPONSIVE — TABLET (≤768px)
-  ════════════════════════════════════════════ */
-  @media (max-width: 768px) {
-    body { padding: 20px 14px 60px; }
-    header { margin-bottom: 32px; }
-    header p { font-size: 12px; }
-    .container { gap: 32px; }
-
-    .block-header { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
-    .block-title  { font-size: 14px; }
-    .block-subtitle { font-size: 10px; }
-
-    .panel { padding: 16px 14px; }
-    pre   { font-size: 11px; padding: 12px; line-height: 1.6; }
-
-    .explanation { padding: 18px 14px; }
-    .explain-grid { grid-template-columns: 1fr; gap: 10px; }
-    .explain-card { padding: 12px 14px; }
-    .explain-card .card-body { font-size: 12px; }
-
-    /* flow — vertical on mobile */
-    .flow-steps { flex-direction: column; align-items: flex-start; gap: 4px; }
-    .flow-arrow { transform: rotate(90deg); padding: 1px 8px; font-size: 13px; }
-    .flow-step  { font-size: 11px; padding: 6px 10px; width: 100%; box-sizing: border-box; }
-
-    .output-box { padding: 14px; }
-
-    /* fix fixed-width inputs/buttons to be full-width */
-    .form-box  { display: flex; flex-direction: column; gap: 8px; }
-    .form-row  { display: flex; flex-direction: column; gap: 8px; }
-    .form-box input  { width: 100% !important; margin: 0; }
-    .form-box button { width: 100%; margin-left: 0 !important; padding: 10px; font-size: 15px; }
-
-    .num-box input  { width: 100% !important; }
-
-    .list-box { display: flex; flex-direction: column; }
-    .list-row { display: flex; flex-direction: column; gap: 8px; }
-    .list-box input  { width: 100% !important; }
-    .list-box button { margin-left: 0 !important; width: 100%; padding: 10px; font-size: 15px; }
-
-    .slider-box img    { width: 100%; max-width: 280px; height: 180px; }
-    .slider-box button { width: 100%; padding: 10px 20px; font-size: 15px; }
-
-    .step-content code { font-size: 11px; padding: 9px 12px; word-break: break-all; }
-    .step-content p    { font-size: 12px; }
-    .data-box          { font-size: 11px; word-break: break-all; }
-    .section-title     { font-size: 11px !important; }
-
-    /* folder tree */
-    .folder-tree { font-size: 11px !important; line-height: 1.8 !important; padding: 12px !important; }
-  }
-
-  /* ════════════════════════════════════════════
-     RESPONSIVE — SMALL MOBILE (≤420px)
-  ════════════════════════════════════════════ */
-  @media (max-width: 420px) {
-    body { padding: 14px 10px 48px; }
-    header .badge { font-size: 9px; letter-spacing: 2px; padding: 3px 10px; }
-    header p { font-size: 10px; word-break: break-all; }
-    .container { gap: 24px; }
-
-    .block-header { padding: 10px 12px; gap: 8px; }
-    .step-num { width: 26px; height: 26px; font-size: 11px; }
-    .block-title  { font-size: 13px; }
-    .block-subtitle { font-size: 9px; }
-
-    .panel { padding: 12px 10px; }
-    pre { font-size: 10px; padding: 10px; }
-
-    .explanation { padding: 14px 10px; }
-    .explanation-title { font-size: 9px; letter-spacing: 2px; }
-    .explain-card { padding: 10px 12px; }
-    .explain-card .card-label { font-size: 9px; }
-    .explain-card .card-title { font-size: 12px; }
-    .explain-card .card-body  { font-size: 11.5px; }
-    .explain-card .card-body code { font-size: 10px; }
-
-    .click-box { height: 100px; border-width: 7px; }
-    .click-box h1 { font-size: 15px; }
-    .msg-box h2 { font-size: 14px; }
-
-    .output-box { padding: 12px; min-height: 70px; }
-    .num-box h2, .list-box h2, .slider-box h2 { font-size: 14px; }
-
-    .step-dot { width: 20px; height: 20px; font-size: 10px; }
-    .step-item { gap: 10px; }
-
-    .flow-step { font-size: 10px; padding: 5px 8px; }
-    .flow-arrow { font-size: 12px; }
-  }
-
-  /* ════════════════════════════════════════════
-     DESKTOP BOOST (≥1024px)
-  ════════════════════════════════════════════ */
-  @media (min-width: 1024px) {
-    .container { max-width: 1080px; }
-    .explain-grid { grid-template-columns: repeat(2, 1fr); }
-    .flow-steps { flex-direction: row; flex-wrap: wrap; align-items: center; }
-    .flow-arrow { transform: none; padding: 0 6px; }
-    .flow-step  { width: auto; }
-
-    /* restore fixed widths on desktop for inputs */
-    .form-box  { flex-direction: row; align-items: center; gap: 0; flex-wrap: wrap; }
-    .form-row  { flex-direction: row; align-items: center; gap: 0; }
-    .form-box input  { width: 180px !important; }
-    .form-box button { width: auto; margin-left: 8px !important; }
-    .num-box input   { width: 160px !important; }
-    .list-row { flex-direction: row; align-items: center; gap: 0; }
-    .list-box input  { width: 150px !important; }
-    .list-box button { width: auto; margin-left: 8px !important; margin-top: 0; }
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .75rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
   }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="badge">React Examples</div>
-  <h1>Code Output Guide</h1>
-  <p>// App.js · server.js · data.json</p>
+  <div class="header-badge">BIG DATA LABORATORY</div>
+  <h1>Lab <span>Manual</span></h1>
+  <p>Hadoop · Hive · Pig · MapReduce · HBase · Spark</p>
 </header>
 
-<div class="container">
+<nav>
+  <a href="#exp1">EX-1 Hadoop Setup</a>
+  <a href="#exp2">EX-2 Word Count</a>
+  <a href="#exp3">EX-3 Weather Analysis</a>
+  <a href="#exp4">EX-4 Hive &amp; Pig</a>
+  <a href="#exp5">EX-5 Visualization</a>
+  <a href="#exp6">EX-6 HBase</a>
+  <a href="#exp7">EX-7 Spark</a>
+  <a href="#summary">Summary</a>
+</nav>
 
-<!-- ═══════════════════ EXAMPLE 1 ═══════════════ -->
-<div class="example-block" style="--accent-line:#ff6b35">
-  <div class="block-header">
-    <div class="step-num" style="background:#ff6b35">1</div>
-    <div>
-      <div class="block-title">Click Counter</div>
-      <div class="block-subtitle">useState · onClick · event handler</div>
+<main>
+
+<!-- ══════════════════════════════════ EX 1 ══ -->
+<section class="experiment exp-1" id="exp1">
+  <div class="exp-header">
+    <div class="exp-num">01</div>
+    <div class="exp-meta">
+      <h2>Hadoop Installation &amp; Configuration</h2>
+      <span class="tag">SETUP · HDFS · YARN</span>
     </div>
   </div>
-
-  <div class="split">
-    <div class="panel">
-      <div class="panel-label">Code — App.js</div>
-      <pre><span class="kw">import</span> { <span class="fn">useState</span> } <span class="kw">from</span> <span class="str">"react"</span>;
-
-<span class="kw">function</span> <span class="fn">App</span>() {
-  <span class="kw">const</span> [count, setCount] = <span class="fn">useState</span>(<span class="num">0</span>);
-
-  <span class="kw">return</span> (
-    <span class="tag">&lt;div</span>
-      <span class="fn">onClick</span>={() =&gt; <span class="fn">setCount</span>(count+<span class="num">1</span>)}
-      style={{
-        width:<span class="str">"100%"</span>, height:<span class="str">"200px"</span>,
-        border:<span class="str">"10px dashed #d61b1b"</span>
-      }}
-    <span class="tag">&gt;</span>
-      <span class="tag">&lt;h1&gt;</span>mmbitan {count}<span class="tag">&lt;/h1&gt;</span>
-      <span class="tag">&lt;h1&gt;</span>Inga vandhu mmbu<span class="tag">&lt;/h1&gt;</span>
-    <span class="tag">&lt;/div&gt;</span>
-  );
-}
-
-<span class="kw">export default</span> App;</pre>
+  <div class="exp-body">
+    <div class="objective">
+      <span class="icon">🎯</span>
+      <span>Install and configure a single-node Hadoop cluster on Ubuntu, set up HDFS and YARN, and verify the installation by running a sample job.</span>
     </div>
+    <div class="steps">
 
-    <div class="panel">
-      <div class="panel-label">Output Preview</div>
-      <div class="output-box">
-        <div class="click-box" onclick="clickCount()">
-          <h1>mmbitan <span id="cnt">0</span></h1>
-          <h1>Inga vandhu mmbu</h1>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Update System &amp; Install Java</h3>
+          <p>Hadoop requires Java 8 or later. Update the package list and install OpenJDK.</p>
+<pre data-lang="bash"><code>sudo apt-get update
+sudo apt-get install -y openjdk-8-jdk
+java -version</code></pre>
         </div>
-        <p style="font-size:11px;color:#888;margin-top:8px;text-align:center">👆 Click the box to increment</p>
       </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Download &amp; Extract Hadoop</h3>
+<pre data-lang="bash"><code>wget https://downloads.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
+tar -xvzf hadoop-3.3.6.tar.gz
+sudo mv hadoop-3.3.6 /usr/local/hadoop</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Configure Environment Variables</h3>
+          <p>Edit <code>~/.bashrc</code> and append the following lines:</p>
+<pre data-lang="bash"><code>export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export HADOOP_HOME=/usr/local/hadoop
+export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop</code></pre>
+<pre data-lang="bash"><code>source ~/.bashrc</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Configure Hadoop XML Files</h3>
+          <p><strong>core-site.xml</strong></p>
+<pre data-lang="xml"><code>&lt;configuration&gt;
+  &lt;property&gt;
+    &lt;name&gt;fs.defaultFS&lt;/name&gt;
+    &lt;value&gt;hdfs://localhost:9000&lt;/value&gt;
+  &lt;/property&gt;
+&lt;/configuration&gt;</code></pre>
+          <p><strong>hdfs-site.xml</strong></p>
+<pre data-lang="xml"><code>&lt;configuration&gt;
+  &lt;property&gt;
+    &lt;name&gt;dfs.replication&lt;/name&gt;
+    &lt;value&gt;1&lt;/value&gt;
+  &lt;/property&gt;
+&lt;/configuration&gt;</code></pre>
+          <p><strong>mapred-site.xml</strong></p>
+<pre data-lang="xml"><code>&lt;configuration&gt;
+  &lt;property&gt;
+    &lt;name&gt;mapreduce.framework.name&lt;/name&gt;
+    &lt;value&gt;yarn&lt;/value&gt;
+  &lt;/property&gt;
+&lt;/configuration&gt;</code></pre>
+          <p><strong>yarn-site.xml</strong></p>
+<pre data-lang="xml"><code>&lt;configuration&gt;
+  &lt;property&gt;
+    &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;
+    &lt;value&gt;mapreduce_shuffle&lt;/value&gt;
+  &lt;/property&gt;
+&lt;/configuration&gt;</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>Setup SSH &amp; Format HDFS</h3>
+<pre data-lang="bash"><code>sudo apt-get install -y ssh
+ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+
+# Format the NameNode
+hdfs namenode -format</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h3>Start Hadoop &amp; Verify</h3>
+<pre data-lang="bash"><code>start-dfs.sh
+start-yarn.sh
+jps   # should show: NameNode, DataNode, ResourceManager, NodeManager</code></pre>
+          <div class="note"><strong>💡 Web UIs:</strong> NameNode → http://localhost:9870 &nbsp;|&nbsp; YARN → http://localhost:8088</div>
+        </div>
+      </div>
+
     </div>
   </div>
+</section>
 
-  <div class="explanation">
-    <div class="explanation-title">📖 Explanation</div>
-    <div class="explain-grid">
-      <div class="explain-card">
-        <div class="card-label">What is useState?</div>
-        <div class="card-title">State Hook</div>
-        <div class="card-body"><code>useState(0)</code> creates a state variable <code>count</code> starting at <code>0</code>. <code>setCount</code> updates it. Every time state changes, React re-renders the component automatically.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">onClick Event</div>
-        <div class="card-title">Event Handler</div>
-        <div class="card-body"><code>onClick={() =&gt; setCount(count+1)}</code> — when the user clicks the div, this arrow function runs and increases count by 1. The <code>=&gt;</code> creates an inline function.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">JSX Expression</div>
-        <div class="card-title">Displaying State</div>
-        <div class="card-body"><code>{count}</code> inside JSX renders the current value. Curly braces <code>{}</code> let you embed any JavaScript expression directly into your HTML-like JSX code.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">Inline Style</div>
-        <div class="card-title">style={{ }} in JSX</div>
-        <div class="card-body">Styles in React are JavaScript objects inside double curly braces. CSS property names become camelCase — <code>border-style</code> → <code>borderStyle</code>, <code>background-color</code> → <code>backgroundColor</code>.</div>
-      </div>
-    </div>
-    <div class="explain-flow">
-      <div class="flow-title">How it works — flow</div>
-      <div class="flow-steps">
-        <div class="flow-step">User clicks div</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">onClick fires</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">setCount(count+1)</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">state updates</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">Re-render with new count</div>
-      </div>
+<!-- ══════════════════════════════════ EX 2 ══ -->
+<section class="experiment exp-2" id="exp2">
+  <div class="exp-header">
+    <div class="exp-num">02</div>
+    <div class="exp-meta">
+      <h2>Word Count using MapReduce</h2>
+      <span class="tag">MAPREDUCE · JAVA · HDFS</span>
     </div>
   </div>
-</div>
-
-<!-- ═══════════════════ EXAMPLE 2 ═══════════════ -->
-<div class="example-block" style="--accent-line:#00d4aa">
-  <div class="block-header">
-    <div class="step-num" style="background:#00d4aa;color:#000">2</div>
-    <div>
-      <div class="block-title">Component Props</div>
-      <div class="block-subtitle">function component · props · reusable</div>
+  <div class="exp-body">
+    <div class="objective">
+      <span class="icon">🎯</span>
+      <span>Implement a MapReduce Word Count program in Java, upload input data to HDFS, run the job, and retrieve the output.</span>
     </div>
-  </div>
+    <div class="steps">
 
-  <div class="split">
-    <div class="panel">
-      <div class="panel-label">Code — App.js</div>
-      <pre><span class="kw">import</span> React <span class="kw">from</span> <span class="str">"react"</span>;
-
-<span class="kw">function</span> <span class="fn">Message</span>(props) {
-  <span class="kw">return</span> (
-    <span class="tag">&lt;h2&gt;</span>
-      Hello, {props.name}!
-      Welcome to React.
-    <span class="tag">&lt;/h2&gt;</span>
-  );
-}
-
-<span class="kw">function</span> <span class="fn">App</span>() {
-  <span class="kw">return</span> (
-    <span class="tag">&lt;div</span> style={{textAlign:<span class="str">"center"</span>}}<span class="tag">&gt;</span>
-      <span class="tag">&lt;Message</span> <span class="fn">name</span>=<span class="str">"A"</span> <span class="tag">/&gt;</span>
-      <span class="tag">&lt;Message</span> <span class="fn">name</span>=<span class="str">"B"</span> <span class="tag">/&gt;</span>
-    <span class="tag">&lt;/div&gt;</span>
-  );
-}
-
-<span class="kw">export default</span> App;</pre>
-    </div>
-
-    <div class="panel">
-      <div class="panel-label">Output Preview</div>
-      <div class="output-box msg-box" style="text-align:center">
-        <h2>Hello, A! Welcome to React.</h2>
-        <h2>Hello, B! Welcome to React.</h2>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Prepare Input Data</h3>
+<pre data-lang="bash"><code>echo "hadoop is a big data framework hadoop is used widely" > input.txt
+hdfs dfs -mkdir -p /user/hadoop/input
+hdfs dfs -put input.txt /user/hadoop/input/</code></pre>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="explanation">
-    <div class="explanation-title">📖 Explanation</div>
-    <div class="explain-grid">
-      <div class="explain-card">
-        <div class="card-label">Component</div>
-        <div class="card-title">What is Message()?</div>
-        <div class="card-body"><code>Message</code> is a custom reusable component — a JavaScript function that returns JSX. Define it once, use it multiple times like an HTML tag: <code>&lt;Message /&gt;</code>.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">Props</div>
-        <div class="card-title">Passing Data to Components</div>
-        <div class="card-body"><code>name="A"</code> is a prop (short for property). Props are passed like HTML attributes and received as <code>props.name</code> inside. They let you reuse the same component with different data.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">Reusability</div>
-        <div class="card-title">One Component, Many Uses</div>
-        <div class="card-body">Instead of writing two separate <code>&lt;h2&gt;</code> tags manually, the same <code>Message</code> component is used twice with different <code>name</code> props. Build once, reuse everywhere.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">Parent → Child</div>
-        <div class="card-title">Component Tree</div>
-        <div class="card-body"><code>App</code> is the parent that renders two child <code>Message</code> components. Data flows one-way: parent → child through props. Children cannot change their own props.</div>
-      </div>
-    </div>
-    <div class="explain-flow">
-      <div class="flow-title">How it works — flow</div>
-      <div class="flow-steps">
-        <div class="flow-step">App renders</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">&lt;Message name="A"/&gt;</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">props.name = "A"</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">Hello, A! Welcome to React.</div>
-      </div>
-    </div>
-  </div>
-</div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Java MapReduce Program</h3>
+          <p>Create <code>WordCount.java</code>:</p>
+<pre data-lang="java"><code><span class="kw">import</span> java.io.*;
+<span class="kw">import</span> java.util.StringTokenizer;
+<span class="kw">import</span> org.apache.hadoop.conf.Configuration;
+<span class="kw">import</span> org.apache.hadoop.fs.Path;
+<span class="kw">import</span> org.apache.hadoop.io.*;
+<span class="kw">import</span> org.apache.hadoop.mapreduce.*;
+<span class="kw">import</span> org.apache.hadoop.mapreduce.lib.input.*;
+<span class="kw">import</span> org.apache.hadoop.mapreduce.lib.output.*;
 
-<!-- ═══════════════════ EXAMPLE 3 ═══════════════ -->
-<div class="example-block" style="--accent-line:#a855f7">
-  <div class="block-header">
-    <div class="step-num" style="background:#a855f7">3</div>
-    <div>
-      <div class="block-title">Form + Express Backend</div>
-      <div class="block-subtitle">fetch · POST · server.js · data.json</div>
-    </div>
-  </div>
+<span class="kw">public class</span> <span class="fn">WordCount</span> {
 
-  <div class="split">
-    <div class="panel">
-      <div class="panel-label">Code — App.js</div>
-      <pre><span class="kw">import</span> { <span class="fn">useState</span> } <span class="kw">from</span> <span class="str">"react"</span>;
+  <span class="kw">public static class</span> TokenizerMapper
+      <span class="kw">extends</span> <span class="fn">Mapper</span>&lt;Object, Text, Text, IntWritable&gt; {
 
-<span class="kw">function</span> <span class="fn">App</span>() {
-  <span class="kw">const</span> [name, setName] = <span class="fn">useState</span>(<span class="str">""</span>);
+    <span class="kw">private final static</span> IntWritable one = <span class="kw">new</span> IntWritable(<span class="num">1</span>);
+    <span class="kw">private</span> Text word = <span class="kw">new</span> Text();
 
-  <span class="kw">const</span> submit = <span class="kw">async</span> (e) =&gt; {
-    e.<span class="fn">preventDefault</span>();
-    <span class="kw">await</span> <span class="fn">fetch</span>(
-      <span class="str">"http://localhost:5000/save"</span>,
-      {
-        method: <span class="str">"POST"</span>,
-        headers: {
-          <span class="str">"Content-Type"</span>:<span class="str">"application/json"</span>
-        },
-        body: <span class="fn">JSON.stringify</span>({ name }),
+    <span class="kw">public void</span> <span class="fn">map</span>(Object key, Text value, Context context)
+        <span class="kw">throws</span> IOException, InterruptedException {
+      StringTokenizer itr = <span class="kw">new</span> StringTokenizer(value.toString());
+      <span class="kw">while</span> (itr.hasMoreTokens()) {
+        word.set(itr.nextToken());
+        context.write(word, one);
       }
+    }
+  }
+
+  <span class="kw">public static class</span> IntSumReducer
+      <span class="kw">extends</span> <span class="fn">Reducer</span>&lt;Text, IntWritable, Text, IntWritable&gt; {
+    <span class="kw">private</span> IntWritable result = <span class="kw">new</span> IntWritable();
+
+    <span class="kw">public void</span> <span class="fn">reduce</span>(Text key, Iterable&lt;IntWritable&gt; values, Context context)
+        <span class="kw">throws</span> IOException, InterruptedException {
+      <span class="kw">int</span> sum = <span class="num">0</span>;
+      <span class="kw">for</span> (IntWritable val : values) sum += val.get();
+      result.set(sum);
+      context.write(key, result);
+    }
+  }
+
+  <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) <span class="kw">throws</span> Exception {
+    Configuration conf = <span class="kw">new</span> Configuration();
+    Job job = Job.getInstance(conf, <span class="str">"word count"</span>);
+    job.setJarByClass(WordCount.<span class="kw">class</span>);
+    job.setMapperClass(TokenizerMapper.<span class="kw">class</span>);
+    job.setCombinerClass(IntSumReducer.<span class="kw">class</span>);
+    job.setReducerClass(IntSumReducer.<span class="kw">class</span>);
+    job.setOutputKeyClass(Text.<span class="kw">class</span>);
+    job.setOutputValueClass(IntWritable.<span class="kw">class</span>);
+    FileInputFormat.addInputPath(job, <span class="kw">new</span> Path(args[<span class="num">0</span>]));
+    FileOutputFormat.setOutputPath(job, <span class="kw">new</span> Path(args[<span class="num">1</span>]));
+    System.exit(job.waitForCompletion(<span class="kw">true</span>) ? <span class="num">0</span> : <span class="num">1</span>);
+  }
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Compile &amp; Package</h3>
+<pre data-lang="bash"><code>mkdir -p wordcount_classes
+javac -classpath $(hadoop classpath) -d wordcount_classes WordCount.java
+jar -cvf wordcount.jar -C wordcount_classes/ .</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Run the MapReduce Job</h3>
+<pre data-lang="bash"><code>hadoop jar wordcount.jar WordCount \
+  /user/hadoop/input \
+  /user/hadoop/output</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>View Output</h3>
+<pre data-lang="bash"><code>hdfs dfs -cat /user/hadoop/output/part-r-00000</code></pre>
+          <div class="note"><strong>Expected:</strong> Each word followed by its frequency count.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════ EX 3 ══ -->
+<section class="experiment exp-3" id="exp3">
+  <div class="exp-header">
+    <div class="exp-num">03</div>
+    <div class="exp-meta">
+      <h2>Weather Data Analysis using MapReduce</h2>
+      <span class="tag">MAPREDUCE · DATA ANALYSIS · HDFS</span>
+    </div>
+  </div>
+  <div class="exp-body">
+    <div class="objective">
+      <span class="icon">🎯</span>
+      <span>Analyse weather dataset using Hadoop MapReduce to find the maximum and minimum temperature recorded per year.</span>
+    </div>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Sample Weather Dataset (NCDC format)</h3>
+          <p>Create <code>weather.txt</code> with tab-separated year and temperature fields:</p>
+<pre data-lang="text"><code>1901  34
+1902  22
+1901  -3
+1902  40
+1901  29
+1902  15</code></pre>
+<pre data-lang="bash"><code>hdfs dfs -mkdir -p /weather/input
+hdfs dfs -put weather.txt /weather/input/</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Mapper Class</h3>
+<pre data-lang="java"><code><span class="kw">import</span> java.io.IOException;
+<span class="kw">import</span> org.apache.hadoop.io.*;
+<span class="kw">import</span> org.apache.hadoop.mapreduce.Mapper;
+
+<span class="kw">public class</span> WeatherMapper
+    <span class="kw">extends</span> <span class="fn">Mapper</span>&lt;LongWritable, Text, Text, IntWritable&gt; {
+
+  <span class="kw">public void</span> <span class="fn">map</span>(LongWritable key, Text value, Context context)
+      <span class="kw">throws</span> IOException, InterruptedException {
+    String line = value.toString();
+    String year = line.substring(<span class="num">0</span>, <span class="num">4</span>);
+    <span class="kw">int</span> temp = Integer.parseInt(line.substring(<span class="num">5</span>).trim());
+    context.write(<span class="kw">new</span> Text(year), <span class="kw">new</span> IntWritable(temp));
+  }
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Reducer Class</h3>
+<pre data-lang="java"><code><span class="kw">import</span> java.io.IOException;
+<span class="kw">import</span> org.apache.hadoop.io.*;
+<span class="kw">import</span> org.apache.hadoop.mapreduce.Reducer;
+
+<span class="kw">public class</span> WeatherReducer
+    <span class="kw">extends</span> <span class="fn">Reducer</span>&lt;Text, IntWritable, Text, IntWritable&gt; {
+
+  <span class="kw">public void</span> <span class="fn">reduce</span>(Text key, Iterable&lt;IntWritable&gt; values, Context context)
+      <span class="kw">throws</span> IOException, InterruptedException {
+    <span class="kw">int</span> maxTemp = Integer.MIN_VALUE;
+    <span class="kw">for</span> (IntWritable val : values)
+      <span class="kw">if</span> (val.get() > maxTemp) maxTemp = val.get();
+    context.write(key, <span class="kw">new</span> IntWritable(maxTemp));
+  }
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Driver Class &amp; Run</h3>
+<pre data-lang="java"><code>Job job = Job.getInstance(conf, <span class="str">"MaxTemperature"</span>);
+job.setMapperClass(WeatherMapper.<span class="kw">class</span>);
+job.setReducerClass(WeatherReducer.<span class="kw">class</span>);
+job.setOutputKeyClass(Text.<span class="kw">class</span>);
+job.setOutputValueClass(IntWritable.<span class="kw">class</span>);</code></pre>
+<pre data-lang="bash"><code>hadoop jar weather.jar WeatherDriver /weather/input /weather/output
+hdfs dfs -cat /weather/output/part-r-00000</code></pre>
+          <div class="note"><strong>Expected Output:</strong>&nbsp; 1901 → 34 &nbsp;|&nbsp; 1902 → 40</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════ EX 4 ══ -->
+<section class="experiment exp-4" id="exp4">
+  <div class="exp-header">
+    <div class="exp-num">04</div>
+    <div class="exp-meta">
+      <h2>Hive &amp; Pig Installation and Queries</h2>
+      <span class="tag">HIVE · PIG · SQL · DATAFLOW</span>
+    </div>
+  </div>
+  <div class="exp-body">
+    <div class="objective">
+      <span class="icon">🎯</span>
+      <span>Install Apache Hive and Apache Pig, create tables/scripts, and execute queries to process structured and semi-structured data.</span>
+    </div>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Install Apache Hive</h3>
+<pre data-lang="bash"><code>wget https://downloads.apache.org/hive/hive-3.1.3/apache-hive-3.1.3-bin.tar.gz
+tar -xvzf apache-hive-3.1.3-bin.tar.gz
+sudo mv apache-hive-3.1.3-bin /usr/local/hive
+
+# Add to ~/.bashrc
+export HIVE_HOME=/usr/local/hive
+export PATH=$PATH:$HIVE_HOME/bin</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Configure Hive Metastore</h3>
+<pre data-lang="bash"><code># Initialize schema (uses Derby by default)
+schematool -initSchema -dbType derby
+hive   # launch Hive shell</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>HiveQL — Create Table &amp; Load Data</h3>
+<pre data-lang="sql"><code><span class="kw">CREATE TABLE</span> students (
+  id     INT,
+  name   STRING,
+  dept   STRING,
+  marks  FLOAT
+)
+<span class="kw">ROW FORMAT DELIMITED</span>
+<span class="kw">FIELDS TERMINATED BY</span> <span class="str">','</span>
+<span class="kw">STORED AS TEXTFILE</span>;
+
+<span class="kw">LOAD DATA LOCAL INPATH</span> <span class="str">'/home/user/students.csv'</span>
+<span class="kw">INTO TABLE</span> students;
+
+<span class="kw">SELECT</span> dept, <span class="fn">AVG</span>(marks) <span class="kw">AS</span> avg_marks
+<span class="kw">FROM</span> students
+<span class="kw">GROUP BY</span> dept;</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Install Apache Pig</h3>
+<pre data-lang="bash"><code>wget https://downloads.apache.org/pig/pig-0.17.0/pig-0.17.0.tar.gz
+tar -xvzf pig-0.17.0.tar.gz
+sudo mv pig-0.17.0 /usr/local/pig
+
+export PIG_HOME=/usr/local/pig
+export PATH=$PATH:$PIG_HOME/bin</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>Pig Latin Script — Word Frequency</h3>
+<pre data-lang="pig"><code>-- Load file
+lines = LOAD <span class="str">'/user/hadoop/input/input.txt'</span>
+        AS (line:chararray);
+
+-- Tokenise
+words = FOREACH lines
+        GENERATE FLATTEN(TOKENIZE(line)) AS word;
+
+-- Group and count
+grp   = GROUP words BY word;
+freq  = FOREACH grp
+        GENERATE group AS word, COUNT(words) AS cnt;
+
+-- Sort and dump
+sorted = ORDER freq BY cnt DESC;
+DUMP sorted;</code></pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════ EX 5 ══ -->
+<section class="experiment exp-5" id="exp5">
+  <div class="exp-header">
+    <div class="exp-num">05</div>
+    <div class="exp-meta">
+      <h2>Data Visualization using Hadoop Output</h2>
+      <span class="tag">JFREECHART · JAVA · VISUALIZATION</span>
+    </div>
+  </div>
+  <div class="exp-body">
+    <div class="objective">
+      <span class="icon">🎯</span>
+      <span>Export Hadoop MapReduce word count output and visualize it as a bar chart using JFreeChart in Java.</span>
+    </div>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Run Word Count &amp; Export Output</h3>
+<pre data-lang="bash"><code>hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar \
+  wordcount input output
+
+hdfs dfs -cat output/part-r-00000
+
+# Export to local filesystem
+hdfs dfs -get output/part-r-00000 wc_output.txt</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Install JFreeChart</h3>
+<pre data-lang="bash"><code>sudo apt-get install -y libjfreechart-java</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Java Visualization Program</h3>
+<pre data-lang="java"><code><span class="kw">import</span> java.io.*;
+<span class="kw">import</span> org.jfree.chart.*;
+<span class="kw">import</span> org.jfree.chart.plot.*;
+<span class="kw">import</span> org.jfree.data.category.*;
+
+<span class="kw">public class</span> HadoopVisualization {
+  <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) <span class="kw">throws</span> Exception {
+    DefaultCategoryDataset dataset = <span class="kw">new</span> DefaultCategoryDataset();
+
+    BufferedReader br = <span class="kw">new</span> BufferedReader(<span class="kw">new</span> FileReader(<span class="str">"wc_output.txt"</span>));
+    String line;
+    <span class="kw">while</span> ((line = br.readLine()) != <span class="kw">null</span>) {
+      String[] parts = line.split(<span class="str">"\\s+"</span>);
+      dataset.addValue(Integer.parseInt(parts[<span class="num">1</span>]), <span class="str">"Words"</span>, parts[<span class="num">0</span>]);
+    }
+    br.close();
+
+    JFreeChart chart = ChartFactory.createBarChart(
+      <span class="str">"Word Count"</span>, <span class="str">"Words"</span>, <span class="str">"Frequency"</span>,
+      dataset, PlotOrientation.VERTICAL,
+      <span class="kw">false</span>, <span class="kw">true</span>, <span class="kw">false</span>
     );
-    <span class="fn">setName</span>(<span class="str">""</span>);
-  };
-
-  <span class="kw">return</span> (
-    <span class="tag">&lt;form</span> <span class="fn">onSubmit</span>={submit}<span class="tag">&gt;</span>
-      <span class="tag">&lt;input</span>
-        value={name}
-        <span class="fn">onChange</span>={
-          (e) =&gt; <span class="fn">setName</span>(e.target.value)
-        }
-        placeholder=<span class="str">"Enter name"</span>
-      <span class="tag">/&gt;</span>
-      <span class="tag">&lt;button&gt;</span>Submit<span class="tag">&lt;/button&gt;</span>
-    <span class="tag">&lt;/form&gt;</span>
-  );
-}
-<span class="kw">export default</span> App;</pre>
-    </div>
-
-    <div class="panel">
-      <div class="panel-label">Output Preview</div>
-      <div class="output-box form-box">
-        <div class="form-row">
-          <input id="nameInput" placeholder="Enter name" />
-          <button onclick="formSubmit()">Submit</button>
-        </div>
-        <p id="formMsg" style="display:none;color:#28a745;font-weight:600">✅ Saved to server!</p>
-      </div>
-
-      <hr class="divider" style="margin-top:14px"/>
-
-      <div class="server-section">
-        <div class="section-title">⚙ Server Setup</div>
-        <div class="step-list">
-
-          <div class="step-item">
-            <div class="step-dot">1</div>
-            <div class="step-content">
-              <p>Create project &amp; init npm — <strong>this creates <code style="color:#a855f7">package.json</code> automatically</strong></p>
-              <code>npm init -y</code>
-              <div class="folder-tree">
-                <span style="color:#888;font-size:10px;letter-spacing:1px">📁 FOLDER STRUCTURE AFTER npm init -y</span><br/><br/>
-                <span style="color:#f59e0b">📂 user/</span><br/>
-                <span style="color:#555">│</span><br/>
-                <span style="color:#555">├──</span> <span style="color:#00d4aa">{} data.json</span>   <span style="color:#546e7a;font-size:10px">← create manually with [ ]</span><br/>
-                <span style="color:#555">├──</span> <span style="color:#a855f7">{} package.json</span> <span style="color:#546e7a;font-size:10px">← ✅ auto-created by npm init -y</span><br/>
-                <span style="color:#555">└──</span> <span style="color:#f59e0b">JS server.js</span>    <span style="color:#546e7a;font-size:10px">← create manually</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="step-item">
-            <div class="step-dot">2</div>
-            <div class="step-content">
-              <p>Install Express &amp; CORS — <strong>adds them to <code style="color:#a855f7">package.json</code> dependencies</strong></p>
-              <code>npm install express cors</code>
-            </div>
-          </div>
-
-          <div class="step-item">
-            <div class="step-dot">3</div>
-            <div class="step-content">
-              <p>Create <strong>data.json</strong> — start with empty array only</p>
-              <code>[ ]</code>
-            </div>
-          </div>
-
-          <div class="step-item">
-            <div class="step-dot">4</div>
-            <div class="step-content">
-              <p>Run the server</p>
-              <code>node server.js</code>
-            </div>
-          </div>
-
-          <div class="step-item">
-            <div class="step-dot">5</div>
-            <div class="step-content">
-              <p>After submitting names, <strong>data.json</strong> updates automatically:</p>
-              <div class="data-box">[ { "name": "kumar" }, { "name": "raj" } ]</div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <hr class="divider"/>
-      <div class="panel-label" style="margin-bottom:10px">Code — server.js</div>
-      <pre style="font-size:clamp(9px,2.2vw,11px)"><span class="kw">const</span> express = <span class="fn">require</span>(<span class="str">"express"</span>);
-<span class="kw">const</span> fs = <span class="fn">require</span>(<span class="str">"fs"</span>);
-<span class="kw">const</span> path = <span class="fn">require</span>(<span class="str">"path"</span>);
-<span class="kw">const</span> cors = <span class="fn">require</span>(<span class="str">"cors"</span>);
-
-<span class="kw">const</span> app = <span class="fn">express</span>();
-app.<span class="fn">use</span>(<span class="fn">cors</span>());
-app.<span class="fn">use</span>(express.<span class="fn">json</span>());
-
-<span class="kw">const</span> filePath = path.<span class="fn">join</span>(
-  __dirname, <span class="str">"data.json"</span>
-);
-
-app.<span class="fn">post</span>(<span class="str">"/save"</span>, (req, res) =&gt; {
-  <span class="kw">let</span> data = [];
-  <span class="kw">if</span> (fs.<span class="fn">existsSync</span>(filePath)) {
-    data = <span class="fn">JSON.parse</span>(
-      fs.<span class="fn">readFileSync</span>(
-        filePath, <span class="str">"utf8"</span>
-      ) || <span class="str">"[]"</span>
+    ChartUtils.saveChartAsJPEG(
+      <span class="kw">new</span> File(<span class="str">"chart.jpg"</span>), chart, <span class="num">800</span>, <span class="num">600</span>
     );
+    System.out.println(<span class="str">"Chart created: chart.jpg"</span>);
   }
-  data.<span class="fn">push</span>(req.body);
-  fs.<span class="fn">writeFileSync</span>(filePath,
-    <span class="fn">JSON.stringify</span>(data,<span class="kw">null</span>,<span class="num">2</span>));
-  res.<span class="fn">send</span>(<span class="str">"Saved"</span>);
-});
-
-app.<span class="fn">listen</span>(<span class="num">5000</span>, () =&gt;
-  console.<span class="fn">log</span>(<span class="str">"Server started on port 5000"</span>));</pre>
-    </div>
-  </div>
-
-  <div class="explanation">
-    <div class="explanation-title">📖 Explanation</div>
-    <div class="explain-grid">
-      <div class="explain-card">
-        <div class="card-label">Controlled Input</div>
-        <div class="card-title">value + onChange</div>
-        <div class="card-body"><code>value={name}</code> ties the input to React state. <code>onChange={(e)=&gt;setName(e.target.value)}</code> updates state on every keystroke. This is a "controlled component".</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">async / await</div>
-        <div class="card-title">Sending Data to Server</div>
-        <div class="card-body"><code>async</code> makes the function asynchronous. <code>await fetch(...)</code> waits for the POST request to finish before continuing. Without <code>await</code>, the code runs before the server responds.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">fetch API</div>
-        <div class="card-title">HTTP POST Request</div>
-        <div class="card-body"><code>fetch("http://localhost:5000/save", { method:"POST", ... })</code> sends data to Express. <code>JSON.stringify({name})</code> converts the JS object into a JSON string for the request body.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">e.preventDefault()</div>
-        <div class="card-title">Prevent Page Reload</div>
-        <div class="card-body">By default, submitting a form reloads the page. <code>e.preventDefault()</code> stops this so React handles the submit itself. Without it, the page refreshes and state is lost.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">CORS</div>
-        <div class="card-title">Why cors is needed</div>
-        <div class="card-body">React runs on <code>:3000</code>, server on <code>:5000</code>. Browsers block cross-origin requests by default. <code>cors()</code> middleware in Express allows requests from different ports.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">fs module</div>
-        <div class="card-title">Reading &amp; Writing Files</div>
-        <div class="card-body">Node's built-in <code>fs</code> reads <code>data.json</code> using <code>readFileSync</code>, adds the new name, then saves back with <code>writeFileSync</code>. Like a simple file-based database.</div>
-      </div>
-    </div>
-    <div class="explain-flow">
-      <div class="flow-title">Full request flow</div>
-      <div class="flow-steps">
-        <div class="flow-step">User types name</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">onChange updates state</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">Submit clicked</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">fetch POST to :5000/save</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">Server writes data.json</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">Input cleared</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════ EXAMPLE 4 ═══════════════ -->
-<div class="example-block" style="--accent-line:#f59e0b">
-  <div class="block-header">
-    <div class="step-num" style="background:#f59e0b;color:#000">4</div>
-    <div>
-      <div class="block-title">Number Sign Checker</div>
-      <div class="block-subtitle">useState · ternary operator · conditional render</div>
-    </div>
-  </div>
-
-  <div class="split">
-    <div class="panel">
-      <div class="panel-label">Code — App.js</div>
-      <pre><span class="kw">import</span> React, { <span class="fn">useState</span> } <span class="kw">from</span> <span class="str">"react"</span>;
-
-<span class="kw">function</span> <span class="fn">App</span>() {
-  <span class="kw">const</span> [num, setNum] = <span class="fn">useState</span>(<span class="str">""</span>);
-
-  <span class="kw">return</span> (
-    <span class="tag">&lt;div&gt;</span>
-      <span class="tag">&lt;h2&gt;</span>Enter Number<span class="tag">&lt;/h2&gt;</span>
-      <span class="tag">&lt;input</span>
-        type=<span class="str">"number"</span>
-        value={num}
-        <span class="fn">onChange</span>={
-          (e) =&gt; <span class="fn">setNum</span>(e.target.value)
-        }
-        placeholder=<span class="str">"Enter number"</span>
-      <span class="tag">/&gt;</span>
-      {
-        num === <span class="str">""</span>
-          ? <span class="tag">&lt;p&gt;</span>Enter a number<span class="tag">&lt;/p&gt;</span>
-          : num &gt; <span class="num">0</span>
-          ? <span class="tag">&lt;p&gt;</span>Positive<span class="tag">&lt;/p&gt;</span>
-          : num &lt; <span class="num">0</span>
-          ? <span class="tag">&lt;p&gt;</span>Negative<span class="tag">&lt;/p&gt;</span>
-          : <span class="tag">&lt;p&gt;</span>Zero<span class="tag">&lt;/p&gt;</span>
-      }
-    <span class="tag">&lt;/div&gt;</span>
-  );
-}
-<span class="kw">export default</span> App;</pre>
-    </div>
-
-    <div class="panel">
-      <div class="panel-label">Output Preview</div>
-      <div class="output-box num-box">
-        <h2>Enter Number</h2>
-        <input type="number" id="numInput" placeholder="Enter number" oninput="checkNum(this.value)" />
-        <p id="numResult">Enter a number</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="explanation">
-    <div class="explanation-title">📖 Explanation</div>
-    <div class="explain-grid">
-      <div class="explain-card">
-        <div class="card-label">Ternary Operator</div>
-        <div class="card-title">condition ? A : B</div>
-        <div class="card-body">Shorthand <code>if-else</code>. Format: <code>condition ? trueValue : falseValue</code>. Here chained — if empty show prompt, else if &gt;0 "Positive", else if &lt;0 "Negative", else "Zero".</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">Conditional Rendering</div>
-        <div class="card-title">Show Different JSX</div>
-        <div class="card-body">React renders different elements based on state. The <code>{ }</code> block evaluates the ternary and returns the correct <code>&lt;p&gt;</code> tag. React swaps the old element for the new one on each re-render.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">useState("")</div>
-        <div class="card-title">Initial State is Empty String</div>
-        <div class="card-body">State starts as <code>""</code>, not <code>0</code>. Checking <code>num === ""</code> shows a hint message before the user types anything, instead of immediately showing "Zero" by default.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">type="number"</div>
-        <div class="card-title">HTML Number Input</div>
-        <div class="card-body"><code>type="number"</code> restricts keyboard to numeric entry and shows up/down arrows. The value from <code>e.target.value</code> is always a string — JS's <code>&gt;</code> and <code>&lt;</code> handle type coercion automatically.</div>
-      </div>
-    </div>
-    <div class="explain-flow">
-      <div class="flow-title">Ternary logic — step by step</div>
-      <div class="flow-steps">
-        <div class="flow-step">num === "" ?</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">"Enter a number"</div>
-        <div class="flow-arrow">|</div>
-        <div class="flow-step">num &gt; 0 ?</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">"Positive"</div>
-        <div class="flow-arrow">|</div>
-        <div class="flow-step">num &lt; 0 ?</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">"Negative" else "Zero"</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════ EXAMPLE 5 ═══════════════ -->
-<div class="example-block" style="--accent-line:#22c55e">
-  <div class="block-header">
-    <div class="step-num" style="background:#22c55e;color:#000">5</div>
-    <div>
-      <div class="block-title">Item List</div>
-      <div class="block-subtitle">useState · spread operator · .map()</div>
-    </div>
-  </div>
-
-  <div class="split">
-    <div class="panel">
-      <div class="panel-label">Code — App.js</div>
-      <pre><span class="kw">import</span> React, { <span class="fn">useState</span> } <span class="kw">from</span> <span class="str">"react"</span>;
-
-<span class="kw">function</span> <span class="fn">App</span>() {
-  <span class="kw">const</span> [item, setItem] = <span class="fn">useState</span>(<span class="str">""</span>);
-  <span class="kw">const</span> [list, setList] = <span class="fn">useState</span>([]);
-
-  <span class="kw">const</span> addItem = () =&gt; {
-    <span class="fn">setList</span>([...list, item]);
-    <span class="fn">setItem</span>(<span class="str">""</span>);
-  };
-
-  <span class="kw">return</span> (
-    <span class="tag">&lt;div&gt;</span>
-      <span class="tag">&lt;h2&gt;</span>Item List<span class="tag">&lt;/h2&gt;</span>
-      <span class="tag">&lt;input</span>
-        type=<span class="str">"text"</span>
-        value={item}
-        <span class="fn">onChange</span>={
-          (e) =&gt; <span class="fn">setItem</span>(e.target.value)
-        }
-        placeholder=<span class="str">"Enter item"</span>
-      <span class="tag">/&gt;</span>
-      <span class="tag">&lt;button</span> <span class="fn">onClick</span>={addItem}<span class="tag">&gt;</span>
-        Add
-      <span class="tag">&lt;/button&gt;</span>
-      <span class="tag">&lt;ul&gt;</span>
-        {list.<span class="fn">map</span>((val, idx) =&gt; (
-          <span class="tag">&lt;li</span> key={idx}<span class="tag">&gt;</span>{val}<span class="tag">&lt;/li&gt;</span>
-        ))}
-      <span class="tag">&lt;/ul&gt;</span>
-    <span class="tag">&lt;/div&gt;</span>
-  );
-}
-<span class="kw">export default</span> App;</pre>
-    </div>
-
-    <div class="panel">
-      <div class="panel-label">Output Preview</div>
-      <div class="output-box list-box">
-        <h2>Item List</h2>
-        <div class="list-row">
-          <input type="text" id="itemInput" placeholder="Enter item" />
-          <button onclick="addItem()">Add</button>
-        </div>
-        <ul id="itemList"></ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="explanation">
-    <div class="explanation-title">📖 Explanation</div>
-    <div class="explain-grid">
-      <div class="explain-card">
-        <div class="card-label">Two States</div>
-        <div class="card-title">item + list</div>
-        <div class="card-body"><code>item</code> holds current text in the input. <code>list</code> holds all added items as an array. Two separate <code>useState</code> calls manage two different pieces of data independently.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">Spread Operator</div>
-        <div class="card-title">[...list, item]</div>
-        <div class="card-body"><code>[...list, item]</code> creates a new array by copying all existing items and appending the new one. Never mutate the old array — React needs a new array reference to detect the change and re-render.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">.map()</div>
-        <div class="card-title">Rendering Lists</div>
-        <div class="card-body"><code>list.map((val, idx) =&gt; &lt;li key={idx}&gt;{val}&lt;/li&gt;)</code> loops through each item and returns a <code>&lt;li&gt;</code> JSX element. React renders all of them inside the <code>&lt;ul&gt;</code>.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">key prop</div>
-        <div class="card-title">Why key={idx}?</div>
-        <div class="card-body">When rendering lists, React needs a unique <code>key</code> on each element to track which item is which. <code>idx</code> (the array index) is used here. For production, a unique ID is better than index.</div>
-      </div>
-    </div>
-    <div class="explain-flow">
-      <div class="flow-title">How addItem works</div>
-      <div class="flow-steps">
-        <div class="flow-step">Type "apple"</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">item = "apple"</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">Click Add</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">setList([...list,"apple"])</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">setItem("") clears input</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">&lt;li&gt; appears in list</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════ EXAMPLE 6 ═══════════════ -->
-<div class="example-block" style="--accent-line:#3b82f6">
-  <div class="block-header">
-    <div class="step-num" style="background:#3b82f6">6</div>
-    <div>
-      <div class="block-title">Image Slider</div>
-      <div class="block-subtitle">useState · dynamic src · picsum.photos API</div>
-    </div>
-  </div>
-
-  <div class="split">
-    <div class="panel">
-      <div class="panel-label">Code — App.js</div>
-      <pre><span class="kw">import</span> React, { <span class="fn">useState</span> } <span class="kw">from</span> <span class="str">"react"</span>;
-
-<span class="kw">function</span> <span class="fn">App</span>() {
-  <span class="kw">const</span> [num, setNum] = <span class="fn">useState</span>(<span class="num">1</span>);
-
-  <span class="kw">function</span> <span class="fn">next</span>() {
-    <span class="fn">setNum</span>(num + <span class="num">1</span>);
-  }
-
-  <span class="kw">return</span> (
-    <span class="tag">&lt;div</span> style={{
-      display:<span class="str">"flex"</span>,
-      flexDirection:<span class="str">"column"</span>,
-      justifyContent:<span class="str">"center"</span>,
-      alignItems:<span class="str">"center"</span>
-    }}<span class="tag">&gt;</span>
-      <span class="tag">&lt;h2&gt;</span>Image Slider<span class="tag">&lt;/h2&gt;</span>
-
-      <span class="tag">&lt;img</span>
-        src={<span class="str">`https://picsum.photos
-          /500/500?random=</span>${num}<span class="str">`</span>}
-        alt=<span class="str">"img"</span>
-      <span class="tag">/&gt;</span>
-
-      <span class="tag">&lt;button</span> <span class="fn">onClick</span>={next}<span class="tag">&gt;</span>
-        Next Image
-      <span class="tag">&lt;/button&gt;</span>
-    <span class="tag">&lt;/div&gt;</span>
-  );
-}
-<span class="kw">export default</span> App;</pre>
-    </div>
-
-    <div class="panel">
-      <div class="panel-label">Output Preview</div>
-      <div class="output-box">
-        <div class="slider-box">
-          <h2>Image Slider</h2>
-          <img id="sliderImg" src="https://picsum.photos/500/500?random=1" alt="img" />
-          <button onclick="nextImage()">Next Image</button>
+}</code></pre>
         </div>
       </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Compile &amp; Run</h3>
+<pre data-lang="bash"><code>javac -cp /usr/share/java/jfreechart.jar:/usr/share/java/jcommon.jar \
+  HadoopVisualization.java
+
+java -cp .:/usr/share/java/jfreechart.jar:/usr/share/java/jcommon.jar \
+  HadoopVisualization</code></pre>
+          <div class="note"><strong>Output:</strong> A JPEG bar chart <code>chart.jpg</code> is created in the current directory.</div>
+        </div>
+      </div>
+
     </div>
   </div>
+</section>
 
-  <div class="explanation">
-    <div class="explanation-title">📖 Explanation</div>
-    <div class="explain-grid">
-      <div class="explain-card">
-        <div class="card-label">Template Literal</div>
-        <div class="card-title">Dynamic Image URL</div>
-        <div class="card-body"><code>`...?random=${num}`</code> uses a backtick template literal to embed <code>num</code> into the URL. Every time <code>num</code> changes, <code>src</code> gets a new URL and the browser loads a different image.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">picsum.photos</div>
-        <div class="card-title">Free Random Image API</div>
-        <div class="card-body">Lorem Picsum is a free public API that returns random 500×500 images. Adding <code>?random=N</code> with different numbers ensures a unique image each time. No API key needed — great for prototyping.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">useState(1)</div>
-        <div class="card-title">Counter as Image Index</div>
-        <div class="card-body">State starts at <code>1</code> and increments on each click. This number is plugged into the API URL. Instead of storing image URLs in an array, the API generates them on demand using the number as a seed.</div>
-      </div>
-      <div class="explain-card">
-        <div class="card-label">Flexbox Layout</div>
-        <div class="card-title">Centering with style</div>
-        <div class="card-body"><code>display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"</code> centers everything using CSS Flexbox — written as a JS object in React's inline <code>style</code> prop.</div>
-      </div>
-    </div>
-    <div class="explain-flow">
-      <div class="flow-title">How the image changes</div>
-      <div class="flow-steps">
-        <div class="flow-step">num = 1 (initial)</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">src = "…/random=1"</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">Click "Next Image"</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">setNum(2)</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">src = "…/random=2"</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">New image loads</div>
-      </div>
+<!-- ══════════════════════════════════ EX 6 ══ -->
+<section class="experiment exp-6" id="exp6">
+  <div class="exp-header">
+    <div class="exp-num">06</div>
+    <div class="exp-meta">
+      <h2>Store Big Data in HBase using Java API</h2>
+      <span class="tag">HBASE · NOSQL · JAVA</span>
     </div>
   </div>
-</div>
+  <div class="exp-body">
+    <div class="objective">
+      <span class="icon">🎯</span>
+      <span>Start HBase, create a table via the HBase shell, insert records using the Java API, and verify data retrieval.</span>
+    </div>
+    <div class="steps">
 
-</div><!-- /container -->
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Start HBase</h3>
+<pre data-lang="bash"><code>start-hbase.sh
+hbase shell</code></pre>
+        </div>
+      </div>
 
-<script>
-  // Ex 1 – Counter
-  let count = 0;
-  function clickCount() {
-    count++;
-    document.getElementById('cnt').textContent = count;
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Create Table in HBase Shell</h3>
+<pre data-lang="hbase"><code>create 'student', 'info'
+list   # verify table exists</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Java Program — Insert &amp; Read Data</h3>
+<pre data-lang="java"><code><span class="kw">import</span> org.apache.hadoop.conf.Configuration;
+<span class="kw">import</span> org.apache.hadoop.hbase.*;
+<span class="kw">import</span> org.apache.hadoop.hbase.client.*;
+<span class="kw">import</span> org.apache.hadoop.hbase.util.Bytes;
+
+<span class="kw">public class</span> HBaseExample {
+  <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) <span class="kw">throws</span> Exception {
+    Configuration config = HBaseConfiguration.create();
+    Connection connection = ConnectionFactory.createConnection(config);
+    Table table = connection.getTable(TableName.valueOf(<span class="str">"student"</span>));
+
+    <span class="cm">// Insert row</span>
+    Put p = <span class="kw">new</span> Put(Bytes.toBytes(<span class="str">"1"</span>));
+    p.addColumn(Bytes.toBytes(<span class="str">"info"</span>), Bytes.toBytes(<span class="str">"name"</span>), Bytes.toBytes(<span class="str">"Abirami"</span>));
+    p.addColumn(Bytes.toBytes(<span class="str">"info"</span>), Bytes.toBytes(<span class="str">"dept"</span>), Bytes.toBytes(<span class="str">"CSE"</span>));
+    table.put(p);
+    System.out.println(<span class="str">"Data Inserted"</span>);
+
+    <span class="cm">// Read row</span>
+    Get g = <span class="kw">new</span> Get(Bytes.toBytes(<span class="str">"1"</span>));
+    Result r = table.get(g);
+    System.out.println(<span class="str">"Name: "</span> +
+      Bytes.toString(r.getValue(Bytes.toBytes(<span class="str">"info"</span>), Bytes.toBytes(<span class="str">"name"</span>))));
+
+    table.close();
+    connection.close();
   }
+}</code></pre>
+        </div>
+      </div>
 
-  // Ex 3 – Form
-  function formSubmit() {
-    const input = document.getElementById('nameInput');
-    if (!input.value.trim()) return;
-    const msg = document.getElementById('formMsg');
-    msg.style.display = 'block';
-    input.value = '';
-    setTimeout(() => msg.style.display = 'none', 2000);
-  }
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Compile &amp; Run</h3>
+<pre data-lang="bash"><code>javac -cp $(hbase classpath) HBaseExample.java
+java  -cp .:$(hbase classpath) HBaseExample</code></pre>
+        </div>
+      </div>
 
-  // Ex 4 – Number
-  function checkNum(v) {
-    const el = document.getElementById('numResult');
-    if (v === '') { el.textContent = 'Enter a number'; el.style.color = '#555'; return; }
-    const n = parseFloat(v);
-    if (n > 0)      { el.textContent = 'Positive ✅'; el.style.color = '#16a34a'; }
-    else if (n < 0) { el.textContent = 'Negative ❌'; el.style.color = '#dc2626'; }
-    else            { el.textContent = 'Zero ⚪';     el.style.color = '#6b7280'; }
-  }
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>Verify in HBase Shell</h3>
+<pre data-lang="hbase"><code>scan 'student'
+get 'student', '1'</code></pre>
+        </div>
+      </div>
 
-  // Ex 5 – List
-  function addItem() {
-    const input = document.getElementById('itemInput');
-    const val = input.value.trim();
-    if (!val) return;
-    const li = document.createElement('li');
-    li.textContent = val;
-    document.getElementById('itemList').appendChild(li);
-    input.value = '';
-    input.focus();
-  }
-  document.getElementById('itemInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') addItem();
-  });
+    </div>
+  </div>
+</section>
 
-  // Ex 6 – Slider
-  let imgNum = 1;
-  function nextImage() {
-    imgNum++;
-    document.getElementById('sliderImg').src =
-      `https://picsum.photos/500/500?random=${imgNum}&t=${Date.now()}`;
+<!-- ══════════════════════════════════ EX 7 ══ -->
+<section class="experiment exp-7" id="exp7">
+  <div class="exp-header">
+    <div class="exp-num">07</div>
+    <div class="exp-meta">
+      <h2>Apache Spark Cluster Setup &amp; Word Count</h2>
+      <span class="tag">SPARK · RDD · DISTRIBUTED</span>
+    </div>
+  </div>
+  <div class="exp-body">
+    <div class="objective">
+      <span class="icon">🎯</span>
+      <span>Download and configure Apache Spark, start a standalone cluster, write a Word Count application using Java RDD API, and submit it via spark-submit.</span>
+    </div>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Download &amp; Extract Spark</h3>
+<pre data-lang="bash"><code>wget https://downloads.apache.org/spark/spark-3.5.0/spark-3.5.0-bin-hadoop3.tgz
+tar -xvf spark-3.5.0-bin-hadoop3.tgz</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Set Environment Variables</h3>
+<pre data-lang="bash"><code># Add to ~/.bashrc
+export SPARK_HOME=~/spark-3.5.0-bin-hadoop3
+export PATH=$PATH:$SPARK_HOME/bin
+source ~/.bashrc</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Start Spark Cluster</h3>
+<pre data-lang="bash"><code>start-master.sh
+start-worker.sh spark://localhost:7077
+
+# Web UI at http://localhost:8080</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Spark Word Count — Java Program</h3>
+<pre data-lang="java"><code><span class="kw">import</span> org.apache.spark.api.java.*;
+<span class="kw">import</span> org.apache.spark.SparkConf;
+<span class="kw">import</span> scala.Tuple2;
+
+<span class="kw">public class</span> SparkWordCount {
+  <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {
+    SparkConf conf = <span class="kw">new</span> SparkConf()
+      .setAppName(<span class="str">"WordCount"</span>)
+      .setMaster(<span class="str">"local"</span>);
+    JavaSparkContext sc = <span class="kw">new</span> JavaSparkContext(conf);
+
+    JavaRDD&lt;String&gt; input = sc.textFile(<span class="str">"input.txt"</span>);
+
+    JavaRDD&lt;String&gt; words = input.flatMap(
+      x -> java.util.Arrays.asList(x.split(<span class="str">" "</span>)).iterator()
+    );
+
+    JavaPairRDD&lt;String, Integer&gt; counts = words
+      .mapToPair(x -> <span class="kw">new</span> Tuple2&lt;&gt;(x, <span class="num">1</span>))
+      .reduceByKey((a, b) -> a + b);
+
+    counts.saveAsTextFile(<span class="str">"spark_output"</span>);
+    sc.close();
   }
-</script>
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>Compile, Package &amp; Submit</h3>
+<pre data-lang="bash"><code>javac -cp "$SPARK_HOME/jars/*" SparkWordCount.java
+jar cvf SparkWordCount.jar SparkWordCount.class
+
+spark-submit \
+  --class SparkWordCount \
+  --master local \
+  SparkWordCount.jar</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h3>View Output</h3>
+<pre data-lang="bash"><code>cat spark_output/part-00000</code></pre>
+          <div class="note"><strong>Note:</strong> Spark is significantly faster than MapReduce for iterative computations due to in-memory processing.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════ SUMMARY ══ -->
+<section id="summary" style="margin-top:3rem;">
+  <h2 style="font-size:1.4rem;color:var(--heading);margin-bottom:1.2rem;font-weight:800;">
+    📋 Experiment Summary
+  </h2>
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>Exp</th>
+        <th>Title</th>
+        <th>Tools Used</th>
+        <th>Outcome</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--accent);font-family:'Share Tech Mono',monospace">01</td>
+        <td>Hadoop Installation</td>
+        <td>Hadoop 3.x, Java, SSH</td>
+        <td>Single-node cluster running HDFS + YARN</td>
+      </tr>
+      <tr>
+        <td style="color:#a78bfa;font-family:'Share Tech Mono',monospace">02</td>
+        <td>Word Count</td>
+        <td>MapReduce, Java, HDFS</td>
+        <td>Frequency count of words in text file</td>
+      </tr>
+      <tr>
+        <td style="color:#34d399;font-family:'Share Tech Mono',monospace">03</td>
+        <td>Weather Data Analysis</td>
+        <td>MapReduce, Java, HDFS</td>
+        <td>Max/min temperature per year extracted</td>
+      </tr>
+      <tr>
+        <td style="color:#fbbf24;font-family:'Share Tech Mono',monospace">04</td>
+        <td>Hive &amp; Pig</td>
+        <td>Apache Hive, Apache Pig</td>
+        <td>SQL queries &amp; dataflow scripts on datasets</td>
+      </tr>
+      <tr>
+        <td style="color:#fb7185;font-family:'Share Tech Mono',monospace">05</td>
+        <td>Data Visualization</td>
+        <td>Hadoop + Java + JFreeChart</td>
+        <td>Bar chart rendered from MapReduce output</td>
+      </tr>
+      <tr>
+        <td style="color:#22d3ee;font-family:'Share Tech Mono',monospace">06</td>
+        <td>HBase Storage</td>
+        <td>Apache HBase, Java API</td>
+        <td>Inserted and retrieved NoSQL records</td>
+      </tr>
+      <tr>
+        <td style="color:#a78bfa;font-family:'Share Tech Mono',monospace">07</td>
+        <td>Apache Spark</td>
+        <td>Spark 3.x, Java RDD API</td>
+        <td>Distributed word count via in-memory processing</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+</main>
+
+<footer>
+  Big Data Laboratory Manual &nbsp;·&nbsp; Hadoop · Hive · Pig · HBase · Spark
+</footer>
 
 </body>
 </html>
